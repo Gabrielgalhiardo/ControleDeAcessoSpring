@@ -1,10 +1,9 @@
-package com.senai.controle_de_acesso_spring.service;
+package com.senai.controle_de_acesso_spring.domain.service;
 
-import com.senai.controle_de_acesso_spring.model.Usuario;
+import com.senai.controle_de_acesso_spring.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

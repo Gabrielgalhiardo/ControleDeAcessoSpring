@@ -1,10 +1,9 @@
-package com.senai.controle_de_acesso_spring.controller;
+package com.senai.controle_de_acesso_spring.interface_ui.controller;
 
-import com.senai.controle_de_acesso_spring.model.Usuario;
-import com.senai.controle_de_acesso_spring.service.UsuarioService;
+import com.senai.controle_de_acesso_spring.domain.model.Usuario;
+import com.senai.controle_de_acesso_spring.domain.service.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
