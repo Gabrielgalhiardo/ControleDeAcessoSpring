@@ -1,15 +1,17 @@
 package com.senai.controle_de_acesso_spring.service;
 
 import com.senai.controle_de_acesso_spring.model.Usuario;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UsuarioService {
 
-    List<Usuario> listaDeUsuarios = new ArrayList<>();
+    private final List<Usuario> listaDeUsuarios;
 
     public void criarUsuario(Usuario usuario){
         listaDeUsuarios.add(usuario);
