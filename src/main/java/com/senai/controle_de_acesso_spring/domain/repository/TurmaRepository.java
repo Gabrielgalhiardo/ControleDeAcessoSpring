@@ -1,9 +1,9 @@
 package com.senai.controle_de_acesso_spring.domain.repository;
 
-import com.senai.controle_de_acesso_spring.domain.model.Aluno;
+import com.senai.controle_de_acesso_spring.domain.model.entity.Turma;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AlunorRepository extends JpaRepository<Aluno, Long> {
+public interface TurmaRepository extends JpaRepository<Turma, Long> {
 }
