@@ -1,7 +1,7 @@
-package com.senai.controle_de_acesso_spring.domain.model;
+package com.senai.controle_de_acesso_spring.domain.model.entity.users;
+import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.web.bind.annotation.Mapping;
 
 import java.util.UUID;
 
@@ -21,10 +21,18 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String telefone;
+    @Column(nullable = false)
+    private String cpf;
 
     @Column(nullable = false)
     private String senha;
+
+    @Enumerated(EnumType.STRING)
+    private StatusDoUsuario statusDoUsuario;
+
+    private String telefoneCelular;
+
+    private String telefoneFixo;
 
     private String caminhoImagem;
 
