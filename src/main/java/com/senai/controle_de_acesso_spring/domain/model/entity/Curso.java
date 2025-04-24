@@ -17,12 +17,6 @@ public class Curso {
     @Column(nullable = false)
     private String nomeDoCurso;
 
-    @Column(nullable = false)
-    private Date dataInicio;
-
-    @Column(nullable = false)
-    private Date dataTermino;
-
     @ManyToMany
     @JoinTable(
             name = "curso_unidades_curriculares",
