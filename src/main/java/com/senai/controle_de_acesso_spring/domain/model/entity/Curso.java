@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity;
 
+import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDoCurso;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,4 +25,13 @@ public class Curso {
             inverseJoinColumns = @JoinColumn(name = "unidade_curricular_id")
     )
     private List<UnidadesCurriculares> unidadesCurriculares;
+
+    private double cargaHoraria;
+
+    @Enumerated(EnumType.STRING)
+    private TipoDoCurso tipoDoCurso;
+
+    private int quantidadeDeSemestres;
+
+    private double tolerancia;
 }

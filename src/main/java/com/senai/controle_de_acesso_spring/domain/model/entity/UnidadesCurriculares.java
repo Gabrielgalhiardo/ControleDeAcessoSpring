@@ -17,6 +17,9 @@ public class UnidadesCurriculares {
     @Column(nullable = false)
     private String nomeUnidadeCurricular;
 
+    @Column(nullable = false)
+    private Double cargahoraria;
+
     @ManyToMany(mappedBy = "unidadesCurriculares", cascade = CascadeType.ALL)
     private List<Curso> curso;
 

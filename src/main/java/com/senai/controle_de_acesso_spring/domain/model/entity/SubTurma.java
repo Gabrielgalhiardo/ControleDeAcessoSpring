@@ -1,0 +1,31 @@
+package com.senai.controle_de_acesso_spring.domain.model.entity;
+
+import com.senai.controle_de_acesso_spring.domain.model.entity.users.Aluno;
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.util.List;
+
+@Entity
+@Data
+public class SubTurma {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @ManyToOne
+    @JoinTable(
+            name = "sub_turma_listaDeSubTurma",
+            joinColumns = @JoinColumn(name = "sub_turma_id"),
+            inverseJoinColumns = @JoinColumn(name = "turma_id")
+    )
+    private Turma turma;
+
+    @ManyToMany
+    @JoinTable(
+            name = "sub_turma_aluno",
+            joinColumns = @JoinColumn(name = "sub_turma_id"),
+            inverseJoinColumns = @JoinColumn(name = "aluno_id")
+    )
+    private List<Aluno> alunos;
+}

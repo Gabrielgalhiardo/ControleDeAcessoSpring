@@ -10,9 +10,6 @@ import java.util.List;
 @Data
 public class Professor extends Usuario {
 
-    @ElementCollection
-    @CollectionTable(name = "turmas", joinColumns = @JoinColumn(name = "turmas_id"))
-    private List<String> turma;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<UnidadesCurriculares> unidadesCurriculares;

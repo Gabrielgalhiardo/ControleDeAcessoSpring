@@ -1,9 +1,11 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity;
 
 import com.senai.controle_de_acesso_spring.domain.model.entity.users.Aluno;
+import com.senai.controle_de_acesso_spring.domain.model.enums.Periodo;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +20,9 @@ public class Turma {
     @Column(nullable = false)
     private String nomeDaTurma;
 
+    @OneToMany(mappedBy = "listaDeSubTurma", cascade = CascadeType.ALL)
+    private List<SubTurma> listaDeSubTurma;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "curso_id")
     private Curso curso;
@@ -25,14 +30,14 @@ public class Turma {
     @Column(nullable = false)
     private Date dataInicio;
 
-    @Column(nullable = false)
-    private Date dataTermino;
+    private Time horarioDeEntrada;
 
-    @ManyToMany
-    @JoinTable(
-            name = "turma_aluno",
-            joinColumns = @JoinColumn(name = "turma_id"),
-            inverseJoinColumns = @JoinColumn(name = "aluno_id")
-    )
-    private List<Aluno> alunos;
+    @Enumerated(EnumType.STRING)
+    private Periodo periodo;
+
+    private int quantidadeDeAulas;
+
+
+
+
 }
