@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 public class Professor extends Usuario {
 
-
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<UnidadesCurriculares> unidadesCurriculares;
 

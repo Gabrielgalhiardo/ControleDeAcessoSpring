@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.users;
 
+import com.senai.controle_de_acesso_spring.domain.model.entity.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.Turma;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -20,6 +21,6 @@ public class Aluno extends Usuario {
     private Date dataDeNascimento;
 
     @ManyToMany(mappedBy = "alunos", cascade = CascadeType.ALL)
-    private List<Turma> turma;
+    private List<SubTurma> subturmas;
 
 }

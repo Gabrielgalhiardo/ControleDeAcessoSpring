@@ -13,7 +13,10 @@ public class SubTurma {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @Column(nullable = false)
+    private String nome;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "sub_turma_listaDeSubTurma",
             joinColumns = @JoinColumn(name = "sub_turma_id"),
