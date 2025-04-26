@@ -23,7 +23,7 @@ public class UnidadesCurriculares {
     @ManyToMany(mappedBy = "unidadesCurriculares", cascade = CascadeType.ALL)
     private List<Curso> curso;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "professor_id", referencedColumnName = "id")
     private Professor professor;
 }

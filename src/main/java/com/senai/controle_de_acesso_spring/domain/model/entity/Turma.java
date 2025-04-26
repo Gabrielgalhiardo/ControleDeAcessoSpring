@@ -20,7 +20,7 @@ public class Turma {
     @Column(nullable = false)
     private String nomeDaTurma;
 
-    @OneToMany(mappedBy = "listaDeSubTurma", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL)
     private List<SubTurma> listaDeSubTurma;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -36,8 +36,4 @@ public class Turma {
     private Periodo periodo;
 
     private int quantidadeDeAulas;
-
-
-
-
 }

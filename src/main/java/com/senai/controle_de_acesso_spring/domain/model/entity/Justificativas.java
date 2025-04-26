@@ -23,7 +23,6 @@ public class Justificativas {
     @Column(nullable = false)
     private int quantidadeDeDias;
 
-
     private String urlAnexo;
 
     private TipoDeJustificativa tipoDeJustificativa;
@@ -31,6 +30,7 @@ public class Justificativas {
     @Column(nullable = false)
     private boolean status;
 
-    //relacionamento com entradaSaida
+    @OneToOne
+    private EntradaSaida entradaSaida;
 
 }

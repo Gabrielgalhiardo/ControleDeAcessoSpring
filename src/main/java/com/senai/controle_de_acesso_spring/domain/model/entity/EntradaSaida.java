@@ -1,9 +1,6 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Time;
@@ -18,7 +15,8 @@ public class EntradaSaida {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Justificativas justificativas;//falta isso
+    @OneToOne
+    private Justificativas justificativas;
 
     private LocalDateTime dataHora;
 
