@@ -17,11 +17,7 @@ public class SubTurma {
     private String nome;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "sub_turma_listaDeSubTurma",
-            joinColumns = @JoinColumn(name = "sub_turma_id"),
-            inverseJoinColumns = @JoinColumn(name = "turma_id")
-    )
+    @JoinColumn(name = "turma_id", nullable = false)
     private Turma turma;
 
     @ManyToMany
