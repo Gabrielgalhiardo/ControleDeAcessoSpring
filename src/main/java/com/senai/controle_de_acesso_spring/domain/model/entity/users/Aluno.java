@@ -20,7 +20,7 @@ public class Aluno extends Usuario {
     @Column(nullable = false)
     private Date dataDeNascimento;
 
-    @ManyToMany(mappedBy = "alunos", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "alunos")
     private List<SubTurma> subturmas;
 
 }

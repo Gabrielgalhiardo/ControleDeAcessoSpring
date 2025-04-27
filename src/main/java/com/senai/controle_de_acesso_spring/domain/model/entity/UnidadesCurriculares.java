@@ -24,6 +24,6 @@ public class UnidadesCurriculares {
     private List<Curso> curso;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "professor_id", referencedColumnName = "id")
+    @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;
 }
