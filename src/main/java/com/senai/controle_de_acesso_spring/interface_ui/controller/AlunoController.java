@@ -35,4 +35,18 @@ public class AlunoController {
         return ResponseEntity.ok(alunos);
     }
 
+    @PutMapping
+    public ResponseEntity<Void> atualizarAluno(@PathVariable Long id, AlunoDto alunoDto) {
+        alunoService.atualizarAluno(id, alunoDto);
+        return ResponseEntity.status(204).build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarAluno(@PathVariable Long id) {
+        alunoService.deletarAluno(id);
+        return ResponseEntity.status(204).build();
+    }
+
+
+
 }
