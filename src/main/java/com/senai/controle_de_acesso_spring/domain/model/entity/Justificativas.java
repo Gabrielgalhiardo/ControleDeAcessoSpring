@@ -1,10 +1,8 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity;
 
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeJustificativa;
-import com.sun.jdi.PrimitiveValue;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.util.Date;
 @Entity
@@ -25,6 +23,7 @@ public class Justificativas {
 
     private String urlAnexo;
 
+    @Enumerated(EnumType.STRING)
     private TipoDeJustificativa tipoDeJustificativa;
 
     @Column(nullable = false)
