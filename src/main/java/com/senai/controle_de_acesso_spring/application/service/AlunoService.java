@@ -27,7 +27,7 @@ public class AlunoService {
         aluno.setDataDeNascimento(alunoDto.dataDeNascimento());
         aluno.setIdade(alunoDto.idade());
 //        aluno.setResponsaveisDoAluno(mapResponsaveis(alunoDto.responsaveisDoAluno()));
-        aluno.setSubturmas(alunoDto.subTurmas());
+//        aluno.setSubTurmas(alunoDto.subTurmas());
         alunoRepository.save(aluno);
         return alunoDto;
     }
@@ -44,7 +44,7 @@ public class AlunoService {
                     aluno.getStatusDoUsuario(),
                     aluno.getDataDeNascimento(),
                     aluno.getIdade(),
-                    aluno.getSubturmas()
+                    aluno.getSubTurmas()
             )).collect(Collectors.toList());
     }
 
@@ -59,9 +59,24 @@ public class AlunoService {
                     aluno.getStatusDoUsuario(),
                     aluno.getDataDeNascimento(),
                     aluno.getIdade(),
-                    aluno.getSubturmas()
+                    aluno.getSubTurmas()
             )).orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
     }
+
+
+    public void atualizarAluno(long id, AlunoDto alunoDto) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            aluno.setTelefoneCelular(alunoDto.telefoneCelular());
+            aluno.setTelefoneFixo(alunoDto.telefoneFixo());
+            alunoRepository.save(aluno);
+        }
+
+        public void deletarAluno(long id) {
+            Aluno aluno = alunoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            alunoRepository.delete(aluno);
+        }
 
 //    public List<ResponsavelDoAluno> mapResponsaveis(List<ResponsavelDoAlunoDto> responsavelDoAlunoDtos){
 //        return responsavelDoAlunoDtos.stream().map(responsavelDoAlunoDto -> {
