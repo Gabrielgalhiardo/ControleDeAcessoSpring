@@ -21,6 +21,5 @@ public class Aluno extends Usuario {
     private Date dataDeNascimento;
 
     @ManyToMany(mappedBy = "alunos")
-    private List<SubTurma> subturmas;
-
+    private List<SubTurma> subTurmas;
 }

@@ -11,7 +11,7 @@ public class AulasDaSemana {
     @Enumerated(EnumType.STRING)
     private DiaDaSemana diaDaSemana;
 
-    @OneToMany
+    @OneToMany(mappedBy = "aula", cascade = CascadeType.ALL)
     @JoinColumn(name = "aula_id")
     private List<Aula> listaDeAulas;
 
