@@ -18,12 +18,8 @@ public class Curso {
     @Column(nullable = false)
     private String nomeDoCurso;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "curso_unidades_curriculares",
-            joinColumns = @JoinColumn(name = "curso_id"),
-            inverseJoinColumns = @JoinColumn(name = "unidades_curriculares_id")
-    )
+    @OneToMany
+    @JoinColumn(name = "unidadesCurriculares_id")
     private List<UnidadesCurriculares> unidadesCurriculares;
 
     private double cargaHoraria;
