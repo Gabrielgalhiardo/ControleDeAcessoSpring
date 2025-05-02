@@ -18,9 +18,8 @@ public class Curso {
     @Column(nullable = false)
     private String nomeDoCurso;
 
-    @OneToMany
-    @JoinColumn(name = "unidadesCurriculares_id")
-    private List<UnidadesCurriculares> unidadesCurriculares;
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UnidadesCurriculares> listaDeUnidadesCurriculares;
 
     private double cargaHoraria;
 

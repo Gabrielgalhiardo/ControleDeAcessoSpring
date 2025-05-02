@@ -20,8 +20,8 @@ public class UnidadesCurriculares {
     @Column(nullable = false)
     private Double cargahoraria;
 
-    @ManyToMany(mappedBy = "unidadesCurriculares", cascade = CascadeType.ALL)
-    private List<Curso> curso;
+    @ManyToOne
+    private Curso curso;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "professor_id", nullable = false)
