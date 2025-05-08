@@ -1,6 +1,5 @@
 package com.senai.controle_de_acesso_spring.interface_ui.controller;
 
-import com.senai.controle_de_acesso_spring.application.service.AlunoService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class UsuarioController {
 
-    private final AlunoService alunoService;
+//    private final AlunoService alunoService;
 
 //    @PostMapping
 //    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario){
