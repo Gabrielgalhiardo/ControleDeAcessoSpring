@@ -3,6 +3,7 @@ package com.senai.controle_de_acesso_spring.interface_ui.controller;
 import com.senai.controle_de_acesso_spring.domain.model.entity.users.Usuario;
 import com.senai.controle_de_acesso_spring.application.service.AlunoService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,16 @@ import java.util.List;
 @RequestMapping("/usuarios")
 @AllArgsConstructor
 public class UsuarioController {
+
+    @Autowired
+    UsuarioService usuarioService;
+
+    @PostMapping
+    public ResponseEntity<Void>cadastrarUsuario(@RequestBody UsuarioDto dto) {
+        usuarioService.cadastrarUsuario(dto);
+        return ResponseEntity.ok().build();
+    }
+
 
     private final AlunoService alunoService;
 
@@ -43,7 +54,6 @@ public class UsuarioController {
 //        alunoService.deletarUsuario(id);
 //        return ResponseEntity.noContent().build();
 //    }
-
 
 
 
