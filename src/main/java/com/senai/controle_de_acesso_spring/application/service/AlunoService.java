@@ -1,7 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service;
 
 import com.senai.controle_de_acesso_spring.application.dto.users.AlunoDto;
-import com.senai.controle_de_acesso_spring.domain.model.entity.users.Aluno;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.repository.AlunoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
