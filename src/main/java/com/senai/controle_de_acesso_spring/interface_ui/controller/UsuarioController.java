@@ -1,7 +1,7 @@
 package com.senai.controle_de_acesso_spring.interface_ui.controller;
 
-import com.senai.controle_de_acesso_spring.domain.model.entity.users.Usuario;
-import com.senai.controle_de_acesso_spring.application.service.AlunoService;
+import com.senai.controle_de_acesso_spring.application.dto.users.UsuarioDto;
+import com.senai.controle_de_acesso_spring.application.service.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +22,6 @@ public class UsuarioController {
         usuarioService.cadastrarUsuario(dto);
         return ResponseEntity.ok().build();
     }
-
-
-    private final AlunoService alunoService;
 
 //    @PostMapping
 //    public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario){
