@@ -1,7 +1,7 @@
-package com.senai.controle_de_acesso_spring.domain.model.entity;
+package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
-import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDoCurso;
+import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeCurso;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +22,7 @@ public class Ocorrencia {
     private StatusDaOcorrencia statusDaOcorrencia;
 
     @Enumerated(EnumType.STRING)
-    private TipoDoCurso tipoDoCurso;
+    private TipoDeCurso tipoDeCurso;
 
     //Depois apagar essa mensagem e colocar relacionamento com Aluno
 }

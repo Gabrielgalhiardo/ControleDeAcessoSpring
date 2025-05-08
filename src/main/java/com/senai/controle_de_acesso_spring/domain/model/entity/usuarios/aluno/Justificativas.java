@@ -1,5 +1,6 @@
-package com.senai.controle_de_acesso_spring.domain.model.entity;
+package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno;
 
+import com.senai.controle_de_acesso_spring.domain.model.entity.EntradaSaida;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeJustificativa;
 import jakarta.persistence.*;
 import lombok.Data;

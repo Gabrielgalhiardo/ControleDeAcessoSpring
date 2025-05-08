@@ -1,12 +1,10 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity;
 
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Justificativas;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Data
