@@ -28,13 +28,13 @@ public class UsuarioService {
             case PROFESSOR -> usuario = new Professor();
             default -> throw new IllegalArgumentException("Tipo de usuário inválido");
         }
-            usuario.setNome(dto.nome());
-            usuario.setCpf(dto.cpf());
-            usuario.setEmail(dto.email());
-            usuario.setDataNascimento(dto.dataNascimento());
-            usuario.setIdAcesso("");
-            usuario.setSenha("");
+        usuario.setNome(dto.nome());
+        usuario.setCpf(dto.cpf());
+        usuario.setEmail(dto.email());
+        usuario.setDataNascimento(dto.dataNascimento());
+        usuario.setIdAcesso("");
+        usuario.setSenha("");
 
-            usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
     }
 }
