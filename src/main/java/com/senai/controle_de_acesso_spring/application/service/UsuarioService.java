@@ -1,10 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service;
 
 import com.senai.controle_de_acesso_spring.application.dto.users.UsuarioDto;
-import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.AQV;
-import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Coordenador;
-import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
-import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.*;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,7 @@ public class UsuarioService {
             case AQV -> usuario = new AQV();
             case COORDENADOR -> usuario = new Coordenador();
             case PROFESSOR -> usuario = new Professor();
+            case ADMINISTRADOR -> usuario = new Admin();
             default -> throw new IllegalArgumentException("Tipo de usuário inválido");
         }
             usuario.setNome(dto.nome());
