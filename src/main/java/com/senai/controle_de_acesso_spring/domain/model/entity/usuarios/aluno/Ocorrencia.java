@@ -1,28 +1,38 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno;
 
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeCurso;
+import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
 public class Ocorrencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private TipoDeOcorrencia tipo;
 
     private String descricao;
 
-    private LocalDateTime dataHora;
-
     @Enumerated(EnumType.STRING)
-    private StatusDaOcorrencia statusDaOcorrencia;
+    private StatusDaOcorrencia status;
 
-    @Enumerated(EnumType.STRING)
-    private TipoDeCurso tipoDeCurso;
+    private LocalDateTime dataHoraCriacao;
+    private LocalDateTime dataHoraConclusao;
 
-    //Depois apagar essa mensagem e colocar relacionamento com Aluno
+    @ManyToOne
+    private Aluno aluno;
+
+    @ManyToOne
+    private Professor professorResponsavel;
+
+    @ManyToOne
+    private UnidadeCurricular unidadeCurricular;
 }
