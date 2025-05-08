@@ -1,7 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.dto.users;
 
-import com.senai.controle_de_acesso_spring.domain.model.entity.SubTurma;
-import com.senai.controle_de_acesso_spring.domain.model.entity.Turma;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 
 import java.util.Date;
