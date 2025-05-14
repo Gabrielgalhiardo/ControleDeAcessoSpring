@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.dto.users;
 
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Coordenador;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeUsuario;
 
@@ -12,6 +13,23 @@ public record CoordenadorDto(
         String cpf,
         String email,
         LocalDate dataNascimento,
-        List<Professor> equipeProfessores,
-        TipoDeUsuario tipoDeUsuario) {
+        List<Professor> equipeProfessores
+) {
+    public static CoordenadorDto toDTO(Coordenador c) {
+    return new CoordenadorDto(c.getId(), c.getNome(), c.getCpf(), c.getEmail(), c.getDataNascimento(), c.getEquipeProfessores());
+    }
+
+    public Coordenador fromDTO() {
+        Coordenador coordenador = new Coordenador();
+        coordenador.setId(id);
+        coordenador.setNome(nome);
+        coordenador.setCpf(cpf);
+        coordenador.setEmail(email);
+        coordenador.setDataNascimento(dataNascimento);
+//      coordenador.setAtivo(true);
+        coordenador.setIdAcesso("");
+        coordenador.setSenha("");
+        coordenador.setEquipeProfessores(equipeProfessores);
+     return coordenador;
+    }
 }
