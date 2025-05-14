@@ -25,7 +25,4 @@ public class AdminController {
         return  ResponseEntity.ok().build();
     }
 
-    @PostMapping
-    public ResponseEntity<Admin> criarAdmin(@RequestBody Admin admin){
-    }
 }
