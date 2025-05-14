@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfessorService {
@@ -15,54 +16,40 @@ public class ProfessorService {
     private ProfessorRepository professorRepo;
 
     public void cadastrarProfessor(ProfessorDto professorDto){
-        Professor professor = new Professor();
-        professor.setNome(professorDto.nome());
-        professor.setCpf(professorDto.cpf());
-        professor.setEmail(professorDto.email());
-        //Adicionar a UnidadeCurricular depois
-
-        professorRepo.save(professor);
+        professorRepo.save(professorDto.fromDTO());
     }
 
-    public List<ProfessorDto> listarProfessor(){
-        return professorRepo.findAll().stream().map(professor -> new ProfessorDto(
-                professor.getId(),
-                professor.getNome(),
-                professor.getCpf(),
-                professor.getEmail()
-                //Adicionar a UnidadeCurricular depois
-            )
-        ).toList();
-    }
+//    public List<ProfessorDto> listarProfessoresAtivos(){
+//        return professorRepo.findByAtivoTrue()
+//                .stream().map(ProfessorDto::toDTO)
+//                .collect(Collectors.toList());
+//    }
 
-    public Optional<ProfessorDto> buscarPorId(Long id){
-        return professorRepo.findById(id).map(professor -> new ProfessorDto(
-                professor.getId(),
-                professor.getNome(),
-                professor.getCpf(),
-                professor.getEmail()
-                //Adicionar a UnidadeCurricular depois
-        ));
-    }
+//    public Optional<ProfessorDto> buscarPorId(Long id){
+//        return professorRepo.findById(id)
+//                .filter(Professor::isAtivo)
+//                .map(ProfessorDto::toDTO);
+//    }
 
-//   public boolean atualizarProfessor(Long id, ProfessorDto professorDto){
-//       return professorRepo.findById(id).map(professor -> {
-//                    professor.setNome(professorDto.nome());
-//                    professor.setCpf(professorDto.cpf());
-//                    professor.setEmail(professorDto.email());
-//                    professorRepo.save(professor);
-//                    //Adicionar a UnidadeCurricular depois
-//        }).orElse(false);
-//   }
-
-    public boolean deletarProfessor(Long id){
-        if (professorRepo.existsById(id)){
-            professorRepo.deleteById(id);
+  public boolean atualizarProfessor(Long id, ProfessorDto professorDto){
+        return professorRepo.findById(id).map(professor -> {
+            Professor professorAtualizado = professorDto.fromDTO();
+            professor.setNome(professorAtualizado.getNome());
+            professor.setEmail(professorAtualizado.getEmail());
+            professor.setDataNascimento(professorAtualizado.getDataNascimento());
+            professor.setCpf(professorAtualizado.getCpf());
+            professorRepo.save(professor);
             return true;
-        } else {
-            return false;
-        }
-    }
+        }).orElse(false);
+  }
+
+//    public boolean inativar(Long id){
+//        return professorRepo.findById(id).map(professor -> {
+//            professor.setAtivo(false);
+//            professorRepo.save(professor);
+//            return true;
+//        }).orElse(false);
+//    }
 
 
 }
