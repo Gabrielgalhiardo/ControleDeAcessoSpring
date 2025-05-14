@@ -23,7 +23,7 @@ public class UsuarioService {
     }
 
     public List<UsuarioDto> listarAtivos() {
-        return usuarioRepository.findByStatusDoUsuarioATIVO()
+        return usuarioRepository.findByStatusDoUsuario(StatusDoUsuario.ATIVO)
                 .stream().map(UsuarioDto::toDTO)
                 .collect(Collectors.toList());
     }
