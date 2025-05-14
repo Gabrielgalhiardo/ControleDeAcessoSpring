@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -14,28 +15,18 @@ public class CoordenadorService {
     @Autowired
     private CoordenadorRepository coordenadorRepository;
 
-    public CoordenadorDto salvarCoordenador(CoordenadorDto coordenadorDto) {
-        Coordenador coordenador = new Coordenador();
-
-        coordenador.setNome(coordenadorDto.nome());
-        coordenador.setCpf(coordenadorDto.cpf());
-        coordenador.setEmail(coordenadorDto.email());
-        coordenador.setDataNascimento(coordenadorDto.dataNascimento());
-        coordenador.setEquipeProfessores(coordenadorDto.equipeProfessores());
-
-        coordenadorRepository.save(coordenador);
-        return coordenadorDto;
+    public void  cadastrarCoordenador(CoordenadorDto coordenadorDto) {
+        coordenadorRepository.save(coordenadorDto.fromDTO());
     }
 
-//    public List<CoordenadorDto> listarCoordenadores(){
-//        return coordenadorRepository.findAll().stream().map(coordenador -> new CoordenadorDto(
-//                coordenador.getNome(),
-//                coordenador.getEmail(),
-//                coordenador.getEmail(),
-//                coordenador.getDataNascimento(),
-//                coordenador.getEquipeProfessores()
-//        )).collect(Collectors.toList());
-//    }
+    public List<CoordenadorDto> listarCoordenadoresAtivos(){
+        return coordenadorRepository.findByAtivoTrue()
+                .stream().map(CoordenadorDto::toDTO)
+                .collect(Collectors.toList());
+    }
 
+    public Optional<CoordenadorDto> buscarPorId(Long id) {
+        return coordenadorRepository.findById(id).filter(Coordenador::isAtivo).map(CoordenadorDto::toDTO);
+    }
 
 }
