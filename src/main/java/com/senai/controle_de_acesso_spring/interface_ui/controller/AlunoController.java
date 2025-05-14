@@ -18,10 +18,10 @@ public class AlunoController {
     @Autowired
     AlunoService alunoService;
 
-    @PostMapping
-    public ResponseEntity<Void>cadastrarUsuario(@RequestBody AlunoDto dto){
-        alunoService.cadastrarUsuario(dto);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping
+//    public ResponseEntity<Void>cadastrarUsuario(@RequestBody AlunoDto dto){
+//        alunoService.cadastrarUsuario(dto);
+//        return ResponseEntity.ok().build();
+//    }
 
 }
