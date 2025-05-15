@@ -26,7 +26,29 @@ public class CoordenadorService {
     }
 
     public Optional<CoordenadorDto> buscarPorId(Long id) {
-        return coordenadorRepository.findById(id).filter(Coordenador::isAtivo).map(CoordenadorDto::toDTO);
+        return coordenadorRepository.findById(id)
+   //             .filter(Coordenador::isAtivo)
+                .map(CoordenadorDto::toDTO);
     }
 
+    public boolean atualizarCoordenador(Long id, CoordenadorDto coordenadorDto) {
+        return coordenadorRepository.findById(id).map(coordenador -> {
+            Coordenador coordenadorAtualizado = coordenadorDto.fromDTO();
+            coordenador.setNome(coordenadorAtualizado.getNome());
+            coordenador.setCpf(coordenadorAtualizado.getCpf());
+            coordenador.setEmail(coordenadorAtualizado.getEmail());
+            coordenador.setDataNascimento(coordenadorAtualizado.getDataNascimento());
+            coordenador.setEquipeProfessores(coordenadorAtualizado.getEquipeProfessores());
+            coordenadorRepository.save(coordenador);
+            return true;
+        }).orElse(false);
+    }
+
+    public boolean inativarCoordenador(Long id) {
+        return coordenadorRepository.findById(id).map(coordenador -> {
+          //coordenador.setAtivo(false);
+            coordenadorRepository.save(coordenador);
+            return true;
+        }).orElse(false);
+    }
 }
