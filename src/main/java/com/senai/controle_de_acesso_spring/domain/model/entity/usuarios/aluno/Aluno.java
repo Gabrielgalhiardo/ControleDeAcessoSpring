@@ -3,18 +3,20 @@ package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
+@Data
 @DiscriminatorValue("ALUNO")
 public class Aluno extends Usuario {
     @OneToMany(mappedBy = "aluno")
-    private List<Ocorrencia> ocorrencias;
+    protected List<Ocorrencia> ocorrencias;
 
     @OneToMany(mappedBy = "aluno")
-    private List<Justificativa> justificativas;
+    protected List<Justificativa> justificativas;
 
     @ManyToMany
-    private List<SubTurma> subTurmas;
+    protected List<SubTurma> subTurmas;
 }
