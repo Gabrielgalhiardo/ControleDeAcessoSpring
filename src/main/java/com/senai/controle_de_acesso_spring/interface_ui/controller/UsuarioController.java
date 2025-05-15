@@ -15,7 +15,7 @@ import java.util.List;
 public class UsuarioController {
 
     @Autowired
-    UsuarioService usuarioService;
+    private UsuarioService usuarioService;
 
     @PostMapping
     public ResponseEntity<Void>cadastrarUsuario(@RequestBody UsuarioDto dto) {

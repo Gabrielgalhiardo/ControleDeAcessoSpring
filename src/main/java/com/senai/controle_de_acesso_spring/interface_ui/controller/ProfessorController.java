@@ -20,17 +20,17 @@ public class ProfessorController {
         return ResponseEntity.ok().build();
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<ProfessorDto> buscarPorId(@PathVariable Long id){
-//        return professorService.buscarPorId(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ProfessorDto> buscarPorId(@PathVariable Long id){
+        return professorService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
-//    @GetMapping("/ativos")
-//    public ResponseEntity<List<ProfessorDto>> listarAtivos() {
-//        return ResponseEntity.ok(professorService.listarProfessoresAtivos());
-//    }
+    @GetMapping("/ativos")
+    public ResponseEntity<List<ProfessorDto>> listarAtivos() {
+        return ResponseEntity.ok(professorService.listarProfessoresAtivos());
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> atualizarProfessor(@PathVariable Long id, @RequestBody ProfessorDto professorDto){
