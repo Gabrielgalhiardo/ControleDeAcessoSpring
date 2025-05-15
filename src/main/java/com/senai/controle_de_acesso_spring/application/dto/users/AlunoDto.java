@@ -29,7 +29,7 @@ public record AlunoDto(
         a.setCpf(cpf);
         a.setEmail(email);
         a.setDataNascimento(dataNascimento);
-//        a.setAtivo(true);
+        a.setStatusDoUsuario(StatusDoUsuario.ATIVO);
         a.setIdAcesso("");
         a.setSenha("");
         a.setJustificativas(new ArrayList<Justificativa>());

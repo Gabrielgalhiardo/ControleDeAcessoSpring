@@ -4,6 +4,7 @@ import com.senai.controle_de_acesso_spring.application.dto.users.AlunoDto;
 import com.senai.controle_de_acesso_spring.application.dto.users.UsuarioDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
+import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.AlunoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,12 @@ public class AlunoService {
     }
 
     public List<AlunoDto> listarAlunosAtivos(){
-       return alunoRepository.findByAtivoTrue().stream().map(AlunoDto::toDTO).collect(Collectors.toList());
+       return alunoRepository.findByStatusDoUsuario(StatusDoUsuario.ATIVO).stream().map(AlunoDto::toDTO).collect(Collectors.toList());
     }
 
-//    public Optional<AlunoDto> buscarPorId(Long id){
-//        return alunoRepository.findById(id).filter(Aluno::isAtivo).map(AlunoDto::toDTO);
-//    }
+    public Optional<AlunoDto> buscarPorId(Long id){
+        return alunoRepository.findById(id).filter(a -> a.getStatusDoUsuario().equals(StatusDoUsuario.ATIVO)).map(AlunoDto::toDTO);
+    }
 
     public boolean atualizar (Long id, AlunoDto alunoDto){
         return alunoRepository.findById(id).map(alunoAntigo ->{
@@ -45,7 +46,7 @@ public class AlunoService {
 
     public boolean inativar(Long id){
         return alunoRepository.findById(id).map(aluno -> {
-//            aluno.setAtivo(false);
+            aluno.setStatusDoUsuario(StatusDoUsuario.INATIVO);
             alunoRepository.save(aluno);
             return true;
         }).orElse(false);
