@@ -4,24 +4,50 @@ import com.senai.controle_de_acesso_spring.application.dto.users.AlunoDto;
 import com.senai.controle_de_acesso_spring.application.service.AlunoService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/alunos")
-@AllArgsConstructor
+
 public class AlunoController {
 
     @Autowired
-    AlunoService alunoService;
+    private AlunoService alunoService;
 
-//    @PostMapping
-//    public ResponseEntity<Void>cadastrarUsuario(@RequestBody AlunoDto dto){
-//        alunoService.cadastrarUsuario(dto);
-//        return ResponseEntity.ok().build();
-//    }
+    @PostMapping
+    public ResponseEntity<Void> cadastrarAluno(@RequestBody AlunoDto alunoDto){
+        alunoService.cadastrarAluno(alunoDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AlunoDto>> listarAlunosAtivos(){
+        return ResponseEntity.ok(alunoService.listarAlunosAtivos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlunoDto> listarAlunoPorId(@PathVariable Long id){
+        return alunoService.buscarAlunoPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AlunoDto> atualizarAluno(@PathVariable Long id, @RequestBody AlunoDto alunoDto){
+        if (alunoService.atualizarAluno(id, alunoDto)){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> inativarAluno(@PathVariable Long id){
+        if (alunoService.inativarAluno(id)){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 }

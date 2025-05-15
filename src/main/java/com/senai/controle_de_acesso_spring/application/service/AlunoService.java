@@ -28,11 +28,11 @@ public class AlunoService {
        return alunoRepository.findByStatusDoUsuario(StatusDoUsuario.ATIVO).stream().map(AlunoDto::toDTO).collect(Collectors.toList());
     }
 
-    public Optional<AlunoDto> buscarPorId(Long id){
+    public Optional<AlunoDto> buscarAlunoPorId(Long id){
         return alunoRepository.findById(id).filter(a -> a.getStatusDoUsuario().equals(StatusDoUsuario.ATIVO)).map(AlunoDto::toDTO);
     }
 
-    public boolean atualizar (Long id, AlunoDto alunoDto){
+    public boolean atualizarAluno (Long id, AlunoDto alunoDto){
         return alunoRepository.findById(id).map(alunoAntigo ->{
             Aluno alunoAtualizado = alunoDto.fromDTO();
             alunoAntigo.setNome(alunoAtualizado.getNome());
@@ -44,7 +44,7 @@ public class AlunoService {
         }).orElse(false);
     }
 
-    public boolean inativar(Long id){
+    public boolean inativarAluno(Long id){
         return alunoRepository.findById(id).map(aluno -> {
             aluno.setStatusDoUsuario(StatusDoUsuario.INATIVO);
             alunoRepository.save(aluno);
