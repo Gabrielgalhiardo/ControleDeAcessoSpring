@@ -11,6 +11,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 public class Ocorrencia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class Ocorrencia {
     private String descricao;
 
     @Enumerated(EnumType.STRING)
-    private StatusDaOcorrencia status;
+    private StatusDaOcorrencia statusDaOcorrencia;
 
     private LocalDateTime dataHoraCriacao;
     private LocalDateTime dataHoraConclusao;
