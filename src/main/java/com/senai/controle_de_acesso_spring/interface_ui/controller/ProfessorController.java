@@ -40,13 +40,13 @@ public class ProfessorController {
         return ResponseEntity.notFound().build();
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> inativar(@PathVariable Long id) {
-//        if (professorService.inativar(id)){
-//            return ResponseEntity.ok().build();
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> inativar(@PathVariable Long id) {
+        if (professorService.inativar(id)){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 
 }
