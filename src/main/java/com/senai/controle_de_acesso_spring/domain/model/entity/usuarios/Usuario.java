@@ -22,6 +22,8 @@ public abstract class Usuario {
     protected String idAcesso;
     protected String email;
     protected String senha;
+    @Enumerated(EnumType.STRING)
+    protected StatusDoUsuario statusDoUsuario;
 
     @ElementCollection(fetch = FetchType.EAGER)
     protected List<String> permissoes;
