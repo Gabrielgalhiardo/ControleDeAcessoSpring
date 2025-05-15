@@ -2,6 +2,7 @@ package com.senai.controle_de_acesso_spring.application.service;
 
 import com.senai.controle_de_acesso_spring.application.dto.users.ProfessorDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
+import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,17 +20,17 @@ public class ProfessorService {
         professorRepo.save(professorDto.fromDTO());
     }
 
-//    public List<ProfessorDto> listarProfessoresAtivos(){
-//        return professorRepo.findByAtivoTrue()
-//                .stream().map(ProfessorDto::toDTO)
-//                .collect(Collectors.toList());
-//    }
+    public List<ProfessorDto> listarProfessoresAtivos(){
+        return professorRepo.findByStatusDoUsuario(StatusDoUsuario.ATIVO)
+                .stream().map(ProfessorDto::toDTO)
+                .collect(Collectors.toList());
+    }
 
-//    public Optional<ProfessorDto> buscarPorId(Long id){
-//        return professorRepo.findById(id)
-//                .filter(Professor::isAtivo)
-//                .map(ProfessorDto::toDTO);
-//    }
+    public Optional<ProfessorDto> buscarPorId(Long id){
+       return professorRepo.findById(id)
+                .filter( p -> p.getStatusDoUsuario().equals(StatusDoUsuario.ATIVO))
+                .map(ProfessorDto::toDTO);
+    }
 
   public boolean atualizarProfessor(Long id, ProfessorDto professorDto){
         return professorRepo.findById(id).map(professor -> {
@@ -43,13 +44,13 @@ public class ProfessorService {
         }).orElse(false);
   }
 
-//    public boolean inativar(Long id){
-//        return professorRepo.findById(id).map(professor -> {
-//            professor.setAtivo(false);
-//            professorRepo.save(professor);
-//            return true;
-//        }).orElse(false);
-//    }
+    public boolean inativar(Long id){
+        return professorRepo.findById(id).map(professor -> {
+            professor.setStatusDoUsuario(StatusDoUsuario.INATIVO);
+            professorRepo.save(professor);
+            return true;
+        }).orElse(false);
+    }
 
 
 }

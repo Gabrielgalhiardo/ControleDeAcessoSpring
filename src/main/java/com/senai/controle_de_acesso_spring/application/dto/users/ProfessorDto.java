@@ -2,6 +2,7 @@ package com.senai.controle_de_acesso_spring.application.dto.users;
 
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
+import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeUsuario;
 
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public record ProfessorDto(
         professor.setCpf(cpf);
         professor.setEmail(email);
         professor.setDataNascimento(dataNascimento);
-//        professor.setAtivo(true);
+        professor.setStatusDoUsuario(StatusDoUsuario.ATIVO);
         return professor;
     }
 }
