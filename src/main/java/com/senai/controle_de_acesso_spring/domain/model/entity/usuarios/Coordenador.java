@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @DiscriminatorValue("COORDENADOR")
 public class Coordenador extends Usuario{
+
     @OneToMany
     private List<Professor> equipeProfessores;
 }
