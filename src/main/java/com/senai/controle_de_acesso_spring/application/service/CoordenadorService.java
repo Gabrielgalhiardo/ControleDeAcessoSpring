@@ -16,7 +16,7 @@ public class CoordenadorService {
     @Autowired
     private CoordenadorRepository coordenadorRepository;
 
-    public void  cadastrarCoordenador(CoordenadorDto coordenadorDto) {
+    public void cadastrarCoordenador(CoordenadorDto coordenadorDto) {
         coordenadorRepository.save(coordenadorDto.fromDTO());
     }
 
