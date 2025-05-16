@@ -16,7 +16,7 @@ public class CursoController {
     private CursoService cursoService;
 
     @PostMapping
-    public ResponseEntity<Void> cadastrarCurso(CursoDto cursoDto){
+    public ResponseEntity<Void> cadastrarCurso(@RequestBody CursoDto cursoDto){
         cursoService.cadastrarCurso(cursoDto);
         return ResponseEntity.status(201).build();
     }
