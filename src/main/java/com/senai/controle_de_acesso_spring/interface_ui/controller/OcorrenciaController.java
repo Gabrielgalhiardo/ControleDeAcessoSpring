@@ -4,6 +4,7 @@ import com.senai.controle_de_acesso_spring.application.dto.users.AlunoDto;
 import com.senai.controle_de_acesso_spring.application.dto.users.OcorrenciaDto;
 import com.senai.controle_de_acesso_spring.application.service.OcorrenciaService;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Ocorrencia;
+import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +22,37 @@ public class OcorrenciaController {
     private OcorrenciaService ocorrenciaService;
 
     @PostMapping
-    public ResponseEntity<Void> cadastrarOcorrencia(@RequestBody OcorrenciaDto ocorrenciaDto){
+    public ResponseEntity<Void> cadastrarOcorrencia(@RequestBody OcorrenciaDto ocorrenciaDto) {
         ocorrenciaService.cadastrarOcorrencia(ocorrenciaDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<OcorrenciaDto>> ListarOcorrencias(){
+    public ResponseEntity<List<OcorrenciaDto>> listarOcorrencias() {
         return ResponseEntity.ok(ocorrenciaService.listarOcorrencias());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlunoDto> atualizarOcorrencia(@PathVariable Long id, @RequestBody OcorrenciaDto ocorrenciaDto) {
-        if (ocorrenciaService.atualizarOcorrencia(id, ocorrenciaDto)){
+    public ResponseEntity<OcorrenciaDto> buscarOcorrenciaPorId(@PathVariable Long id) {
+        return ocorrenciaService.buscarOcorrenciaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OcorrenciaDto> atualizarOcorrencia(@PathVariable Long id, @RequestBody OcorrenciaDto ocorrenciaDto) {
+        if (ocorrenciaService.atualizarOcorrencia(id, ocorrenciaDto)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OcorrenciaDto> atualizarStatusDaOcorrencia(@PathVariable Long id, @RequestBody StatusDaOcorrencia statusDaOcorrencia) {
+        if (ocorrenciaService.mudarStatusDaOcorrencia(id, statusDaOcorrencia)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+
     }
 
 }

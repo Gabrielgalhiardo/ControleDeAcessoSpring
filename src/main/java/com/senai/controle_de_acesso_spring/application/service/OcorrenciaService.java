@@ -45,12 +45,12 @@ public class OcorrenciaService {
         }).orElse(false);
     }
 
-    public void mudarStatusDaOcorrencia (Long id, StatusDaOcorrencia statusDaOcorrencia){
+    public boolean mudarStatusDaOcorrencia (Long id, StatusDaOcorrencia statusDaOcorrencia){
         ocorrenciaRepository.findById(id).map( ocorrencia ->{
             ocorrencia.setStatusDaOcorrencia(statusDaOcorrencia);
             ocorrenciaRepository.save(ocorrencia);
             return true;
         }).orElse(false);
-
+        return false;
     }
 }
