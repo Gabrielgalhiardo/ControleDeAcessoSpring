@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.interface_ui.controller;
 
+import com.senai.controle_de_acesso_spring.application.dto.users.AdminDto;
 import com.senai.controle_de_acesso_spring.application.dto.users.AmbienteDto;
 import com.senai.controle_de_acesso_spring.application.service.AmbienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
-@Repository
+import java.util.List;
+
+@RestController
 @RequestMapping("/ambiente")
 public class AmbienteController {
 
@@ -21,6 +24,8 @@ public class AmbienteController {
         return ResponseEntity.ok().build();
     }
 
+
+
     @GetMapping("/{id}")
     public ResponseEntity<AmbienteDto> buscarAmbientePorId(@PathVariable Long id) {
         return ambienteService.buscarPorId(id).
@@ -28,7 +33,12 @@ public class AmbienteController {
                 orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping
+    public ResponseEntity<List<AmbienteDto>> listarAmbientes() {
+        return ResponseEntity.ok(ambienteService.listarAmbientesAtivos());
+    }
+
+    @PutMapping("/{id}")
     public ResponseEntity<Void> atualizarAmbiente(@PathVariable Long id, @RequestBody AmbienteDto ambienteDto) {
         if (ambienteService.atualizarAmbientes(id, ambienteDto)) {
             return ResponseEntity.ok().build();
