@@ -39,13 +39,14 @@ public class TurmaService {
             turma.setHorarioEntrada(turmaAtualizado.getHorarioEntrada());
             turma.setQtdSemestres(turmaAtualizado.getQtdSemestres());
             turma.setQtdAulasPorDia(turmaAtualizado.getQtdAulasPorDia());
+            turmaRepo.save(turma);
             return true;
         }).orElse(false);
     }
 
     public boolean inativar(Long id){
         return turmaRepo.findById(id).map(turma -> {
-            turmaRepo.save(turma);
+            turmaRepo.delete(turma);
             return true;
         }).orElse(false);
     }
