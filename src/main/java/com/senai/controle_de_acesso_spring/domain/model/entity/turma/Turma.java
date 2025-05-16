@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 public class Turma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
