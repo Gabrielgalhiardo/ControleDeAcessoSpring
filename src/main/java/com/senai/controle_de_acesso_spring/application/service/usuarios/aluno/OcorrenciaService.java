@@ -22,7 +22,7 @@ public class OcorrenciaService {
     }
 
     public List<OcorrenciaDto> listarOcorrencias(){
-        return ocorrenciaRepository.findByStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO).stream().map(OcorrenciaDto::toDTO).collect(Collectors.toList());
+        return ocorrenciaRepository.findAll().stream().map(OcorrenciaDto::toDTO).collect(Collectors.toList());
     }
 
     public Optional<OcorrenciaDto> buscarOcorrenciaPorId(Long id){
@@ -40,16 +40,17 @@ public class OcorrenciaService {
             ocorrenciaAntiga.setAluno(ocorrenciaAtualizada.getAluno());
             ocorrenciaAntiga.setProfessorResponsavel(ocorrenciaAtualizada.getProfessorResponsavel());
             ocorrenciaAntiga.setUnidadeCurricular(ocorrenciaAtualizada.getUnidadeCurricular());
+            ocorrenciaRepository.save(ocorrenciaAntiga);
             return true;
         }).orElse(false);
     }
 
     public boolean mudarStatusDaOcorrencia (Long id, StatusDaOcorrencia statusDaOcorrencia){
-        ocorrenciaRepository.findById(id).map( ocorrencia ->{
+        return ocorrenciaRepository.findById(id).map( ocorrencia ->{
             ocorrencia.setStatusDaOcorrencia(statusDaOcorrencia);
             ocorrenciaRepository.save(ocorrencia);
             return true;
         }).orElse(false);
-        return false;
     }
+
 }
