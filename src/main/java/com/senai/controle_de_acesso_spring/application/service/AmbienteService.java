@@ -5,11 +5,13 @@ import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Ambiente;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.AmbienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class AmbienteService {
     @Autowired
     private AmbienteRepository ambienteRepository;
