@@ -2,63 +2,54 @@ package com.senai.controle_de_acesso_spring.application.service;
 
 import com.senai.controle_de_acesso_spring.application.dto.users.AdminDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Admin;
+import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
     @Autowired
     private AdminRepository adminRepository;
 
-    public void cadastrarAdmin(AdminDto dto) {
-        Admin admin = new Admin();
-
-        admin.setNome(dto.nome());
-        admin.setCpf(dto.cpf());
-        admin.setEmail(dto.email());
-        admin.setDataNascimento(dto.dataNascimento());
-        admin.setIdAcesso("");
-        admin.setSenha("");
-
-        adminRepository.save(admin);
+    public void cadastrarAdmin(AdminDto adminDto) {
+        adminRepository.save(adminDto.fromDTO());
     }
 
-    public void atualizarAdminPeloId(Long id, AdminDto adminDto) {
-        Admin admin = adminRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Admin não encontrado"));
-
-        admin.setNome(adminDto.nome());
-        admin.setCpf(adminDto.cpf());
-        admin.setEmail(adminDto.email());
-        admin.setDataNascimento(adminDto.dataNascimento());
-        admin.setIdAcesso("");
-        admin.setSenha("");
-
-        adminRepository.save(admin);
+    public List<AdminDto> listarAdminsAtivos() {
+                 return adminRepository.findByStatusDoUsuario(StatusDoUsuario.ATIVO)
+                         .stream().map(AdminDto::toDTO)
+                         .collect(Collectors.toList());
     }
 
-    public List<AdminDto> pegarTodosOsAdmin() {
-        return adminRepository.findAll().stream().map(admin -> new AdminDto(admin.getId(),
-                admin.getNome(),
-                admin.getCpf(),
-                admin.getEmail(),
-                admin.getDataNascimento())).toList();
+    public Optional<AdminDto> buscarPorId(Long id) {
+        return adminRepository.findById(id)
+                .filter(a -> a.getStatusDoUsuario()
+                .equals(StatusDoUsuario.ATIVO))
+                .map(AdminDto::toDTO);
     }
 
-    public AdminDto pegarUmAdminPeloId(Long id) {
-        Admin admin = adminRepository.findById(id).orElseThrow(() -> new RuntimeException("Admin não encontrado"));
-        AdminDto adminDto = new AdminDto(admin.getId(),
-                admin.getNome(),
-                admin.getCpf(),
-                admin.getEmail(),
-                admin.getDataNascimento());
-        return adminDto;
+    public boolean atualizarAdmin(Long id, AdminDto adminDto) {
+        return adminRepository.findById(id).map(admin -> {
+            Admin adminAtualizado = adminDto.fromDTO();
+            admin.setNome(adminAtualizado.getNome());
+            admin.setCpf(adminAtualizado.getCpf());
+            admin.setEmail(adminAtualizado.getEmail());
+            admin.setDataNascimento(adminAtualizado.getDataNascimento());
+            adminRepository.save(admin);
+            return true;
+        }).orElse(false);
     }
 
-    public void deletarAdminPeloId(Long id) {
-        adminRepository.deleteById(id);
+    public boolean inativarAdmin(Long id) {
+        return  adminRepository.findById(id).map(admin -> {
+            admin.setStatusDoUsuario(StatusDoUsuario.ATIVO);
+            adminRepository.save(admin);
+            return true;
+        }).orElse(false);
     }
 }
