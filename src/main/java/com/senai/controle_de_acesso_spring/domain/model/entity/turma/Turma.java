@@ -12,13 +12,17 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 public class Turma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
-    private String periodo;
+
+    @Enumerated(EnumType.STRING)
+    private Periodo periodo;
+
     private LocalDate dataInicial;
     private LocalTime horarioEntrada;
     private Integer qtdSemestres;

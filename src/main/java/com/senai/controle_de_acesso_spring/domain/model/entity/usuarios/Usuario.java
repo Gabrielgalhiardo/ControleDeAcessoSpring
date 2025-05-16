@@ -17,7 +17,7 @@ public abstract class Usuario {
     protected Long id;
 
     protected String nome;
-    protected String cpf; // usado como login
+    protected String cpf;
     protected LocalDate dataNascimento;
     protected String idAcesso;
     protected String email;
