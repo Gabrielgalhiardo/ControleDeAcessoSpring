@@ -26,7 +26,7 @@ public class JustificativaService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<JustificativaDto> buscarPorId(Long id) {
+    public Optional<JustificativaDto> buscarJustificativaPorId(Long id) {
         return justificativaRepository.findById(id)
                 .filter(j -> j.getStatusDaJustificativa()
                 .equals(StatusDaJustificativa.APROVADA))
