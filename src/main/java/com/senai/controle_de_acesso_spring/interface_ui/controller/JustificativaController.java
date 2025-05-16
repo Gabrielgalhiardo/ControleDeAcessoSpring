@@ -42,7 +42,7 @@ public class JustificativaController {
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/status")
     public ResponseEntity<Void> mudarStatusDaJustificativa(@PathVariable Long id, @RequestBody StatusDaJustificativa statusDaJustificativa) {
         if (justificativaService.mudarStatusDaJustificativa(id, statusDaJustificativa)) {
             return ResponseEntity.ok().build();
