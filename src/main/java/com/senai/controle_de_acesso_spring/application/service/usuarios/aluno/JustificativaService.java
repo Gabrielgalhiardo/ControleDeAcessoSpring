@@ -21,16 +21,13 @@ public class JustificativaService {
     }
 
     public List<JustificativaDto> listarJustificativas(){
-        return justificativaRepository.findByStatusDaJustificativa(StatusDaJustificativa.APROVADA)
+        return justificativaRepository.findAll()
                 .stream().map(JustificativaDto::toDTO)
                 .collect(Collectors.toList());
     }
 
     public Optional<JustificativaDto> buscarJustificativaPorId(Long id) {
-        return justificativaRepository.findById(id)
-                .filter(j -> j.getStatusDaJustificativa()
-                .equals(StatusDaJustificativa.APROVADA))
-                .map(JustificativaDto::toDTO);
+        return justificativaRepository.findById(id).map(JustificativaDto::toDTO);
     }
 
     public boolean atualizarJustificativa(Long id, JustificativaDto justificativaDto) {
