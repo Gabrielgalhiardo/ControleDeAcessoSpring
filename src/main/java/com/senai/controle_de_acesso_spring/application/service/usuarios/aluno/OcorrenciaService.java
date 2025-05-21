@@ -1,14 +1,13 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDto;
-import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Ocorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
-import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.OcorrenciaRepository;
-import com.senai.controle_de_acesso_spring.domain.repository.usuarios.UsuarioRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.OcorrenciaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,50 +39,17 @@ public class OcorrenciaService {
         Optional<Usuario> usuario = usuarioRepository.findByIdAcesso(idAcesso);
         if (usuario.isPresent()) {
             if (usuario.get() instanceof Aluno aluno){
-                if (aluno.getSubTurmas().get().getTurma().getHorarioEntrada() > (aluno.getSubTurmas().get().getTurma().getCurso().getToleranciaMinutos() + LocalTime.now())){
-                    Ocorrencia ocorrencia = new Ocorrencia();
-                    ocorrencia.setTipo(TipoDeOcorrencia.ATRASO);
-                    ocorrencia.setDescricao("Atraso na entrada");
-                    ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
-                    ocorrencia.setDataHoraCriacao(LocalDateTime.now());
-                    ocorrencia.setAluno(aluno);
-
-                    aluno.getSubTurmas().get(2).getTurma().getCurso().;
-
-                    ocorrencia.setProfessorResponsavel();
-                    ocorrencia.setUnidadeCurricular();
-                    ocorrenciaRepository.save(ocorrencia);
-                    System.out.println("Ocorrência de atraso criada com sucesso!");
-                    return "Ocorrência de atraso criada com sucesso!";
-                }
-
-            } else {
-                System.out.println("Usuário não é um aluno");
-                throw new RuntimeException("Usuário não é um aluno");
-            }
-        } else {
-            System.out.println("Usuário não encontrado");
-            throw new RuntimeException("Usuário não encontrado");
-        }
-    }
-
-    public String criarOcorrenciaDeSaida(String idAcesso) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAcesso(idAcesso);
-        if (usuarioOptional.isPresent()) {
-            if (usuarioOptional.get() instanceof Aluno aluno){
                 Ocorrencia ocorrencia = new Ocorrencia();
-                ocorrencia.setTipo(TipoDeOcorrencia.SAIDA_ANTECIPADA);
-                ocorrencia.setDescricao("Saída Antecipada");
+                ocorrencia.setTipo(TipoDeOcorrencia.ATRASO);
+                ocorrencia.setDescricao("Atraso na entrada");
                 ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
                 ocorrencia.setDataHoraCriacao(LocalDateTime.now());
                 ocorrencia.setAluno(aluno);
-                ocorrencia.setProfessorResponsavel(ocorrencia.getProfessorResponsavel());//corrigir isso
-                ocorrencia.setUnidadeCurricular(ocorrencia.getUnidadeCurricular());//corrigir isso
                 ocorrenciaRepository.save(ocorrencia);
-                System.out.println("Ocorrência de saída antecipada criada com sucesso!");
-                return "Ocorrência de saída antecipada criada com sucesso!";
+                System.out.println("Ocorrência de atraso criada com sucesso!");
+                return "Ocorrência de atraso criada com sucesso!";
             } else {
-                System.out.println("Usuário não é aluno");
+                System.out.println("Usuário não é um aluno");
                 throw new RuntimeException("Usuário não é um aluno");
             }
         } else {
