@@ -2,6 +2,8 @@ package com.senai.controle_de_acesso_spring.interface_ui.controller.usuarios.alu
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDto;
 import com.senai.controle_de_acesso_spring.application.service.usuarios.aluno.OcorrenciaService;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("ocorrencias")
@@ -22,6 +25,10 @@ public class OcorrenciaController {
     public ResponseEntity<Void> cadastrarOcorrencia(@RequestBody OcorrenciaDto ocorrenciaDto) {
         ocorrenciaService.cadastrarOcorrencia(ocorrenciaDto);
         return ResponseEntity.ok().build();
+    }
+
+    public void criarOcorrenciaDeAtraso(String idAcesso) {
+        ocorrenciaService.criarOcorrenciaDeAtraso(idAcesso);
     }
 
     @GetMapping
