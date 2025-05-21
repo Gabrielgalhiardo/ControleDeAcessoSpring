@@ -11,4 +11,5 @@ ControleDeAcessoSpringApplication {
 		SpringApplication.run(ControleDeAcessoSpringApplication.class, args);
 	}
 
+
 }

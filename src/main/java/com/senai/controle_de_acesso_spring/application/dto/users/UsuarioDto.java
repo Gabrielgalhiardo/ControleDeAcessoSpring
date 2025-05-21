@@ -12,6 +12,7 @@ public record UsuarioDto(Long id,
                          String cpf,
                          String email,
                          LocalDate dataNascimento,
+                         String idAcesso,
                          TipoDeUsuario tipoDeUsuario) {
     public static UsuarioDto toDTO(Usuario u) {
         TipoDeUsuario tipo = switch (u) {
@@ -21,7 +22,7 @@ public record UsuarioDto(Long id,
             case AQV aqv -> TipoDeUsuario.AQV;
             default -> throw new IllegalArgumentException("Tipo de usuário desconhecido");
         };
-        return new UsuarioDto(u.getId(), u.getNome(), u.getCpf(), u.getEmail(), u.getDataNascimento(), tipo);
+        return new UsuarioDto(u.getId(), u.getNome(), u.getCpf(), u.getEmail(), u.getDataNascimento(),u.getIdAcesso(), tipo);
     }
 
     public Usuario fromDTO() {
@@ -38,6 +39,7 @@ public record UsuarioDto(Long id,
         usuario.setEmail(email);
         usuario.setDataNascimento(dataNascimento);
         usuario.setStatusDoUsuario(StatusDoUsuario.ATIVO);
+        usuario.setIdAcesso(idAcesso);
         usuario.setIdAcesso("");
         usuario.setSenha("");
         return usuario;
