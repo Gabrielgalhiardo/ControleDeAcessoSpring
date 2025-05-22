@@ -6,16 +6,14 @@ import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Al
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Ocorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
-import com.senai.controle_de_acesso_spring.domain.repository.OcorrenciaRepository;
-import com.senai.controle_de_acesso_spring.domain.repository.UsuarioRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.OcorrenciaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service

@@ -21,7 +21,6 @@ public class Curso {
 
     private Integer cargaHoraria;
     private Integer toleranciaMinutos;
-    private Integer quantidadeDeSemestres;
 
     @OneToMany(mappedBy = "curso")
     private List<UnidadeCurricular> unidadesCurriculares;

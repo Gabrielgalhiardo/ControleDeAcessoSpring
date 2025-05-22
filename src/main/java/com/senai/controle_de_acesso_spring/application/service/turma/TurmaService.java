@@ -2,7 +2,7 @@ package com.senai.controle_de_acesso_spring.application.service.turma;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.TurmaDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Turma;
-import com.senai.controle_de_acesso_spring.domain.repository.TurmaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.turma.TurmaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

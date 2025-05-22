@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios;
 
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -14,9 +15,8 @@ public abstract class HorarioBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @OneToOne
-    @JoinColumn(name = "sub_turma_id", nullable = false, unique = true)
-    protected SubTurma subTurma;
+    @ManyToOne
+    private Semestre semestre;
 
     @OneToMany(mappedBy = "horario", cascade = CascadeType.ALL, orphanRemoval = true)
     protected List<AulasDoDia> diasDaSemana;

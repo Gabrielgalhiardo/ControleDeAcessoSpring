@@ -16,16 +16,12 @@ public class SubTurma {
     private String nome;
 
     @ManyToOne
+    @JoinColumn(name = "turma_id")
     private Turma turma;
 
     @ManyToMany(mappedBy = "subTurmas")
     private List<Aluno> alunos;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "horario_padrao_id")
-    private HorarioPadrao horarioPadrao;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sub_turma_id")
-    private List<HorarioSemanal> horariosSemanais;
+    @OneToMany(mappedBy = "subTurma", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Semestre> semestres;
 }

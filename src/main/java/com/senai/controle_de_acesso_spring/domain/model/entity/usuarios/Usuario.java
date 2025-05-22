@@ -1,7 +1,9 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
