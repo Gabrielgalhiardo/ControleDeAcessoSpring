@@ -3,7 +3,7 @@ package com.senai.controle_de_acesso_spring.application.service.usuarios;
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.CoordenadorDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Coordenador;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
-import com.senai.controle_de_acesso_spring.domain.repository.CoordenadorRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.CoordenadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,17 +1,24 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
+import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.AlunoDto;
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDto;
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Aula;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Ocorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
-import com.senai.controle_de_acesso_spring.domain.repository.OcorrenciaRepository;
-import com.senai.controle_de_acesso_spring.domain.repository.UsuarioRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.turma.SubTurmaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.OcorrenciaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
@@ -29,6 +36,9 @@ public class OcorrenciaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private SubTurmaRepository subTurmaRepository;
+
     public void cadastrarOcorrencia(OcorrenciaDto ocorrenciaDto){
         ocorrenciaRepository.save(ocorrenciaDto.fromDTO());
     }
@@ -37,20 +47,40 @@ public class OcorrenciaService {
         return ocorrenciaRepository.findAll().stream().map(OcorrenciaDto::toDTO).collect(Collectors.toList());
     }
 
+    public SubTurma pegarSubTurmaAtual(Aluno aluno){
+        LocalTime horarioAtual = LocalTime.now();
+        for (SubTurma subTurma : aluno.getSubTurmas()){
+            LocalTime horarioEntrada = subTurma.getTurma().getHorarioEntrada();
+            int minutosPorAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
+            int minutosPorIntervalo = subTurma.getTurma().getCurso().getTipoDeCurso().getIntevarloMinutos();
+            int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
+            LocalTime horarioDeSaida = horarioEntrada.plusMinutes((minutosPorAula*quantidadeDeAulasPorDia)+minutosPorIntervalo);
+            if (horarioAtual.isAfter(horarioEntrada) && horarioAtual.isBefore(horarioDeSaida)) {
+                return subTurma;
+            }
+        }
+        throw new RuntimeException("O aluno não têm nehuma turma nesse horario");
+    }
+
+    public Aula pegarAula(Aluno aluno){
+        DayOfWeek dataAtual = LocalDateTime.now().getDayOfWeek();
+        for ()
+    }
+
     public String criarOcorrenciaDeAtraso(String idAcesso) {
         Optional<Usuario> usuario = usuarioRepository.findByIdAcesso(idAcesso);
         if (usuario.isPresent()) {
             if (usuario.get() instanceof Aluno aluno){
-                if (aluno.getSubTurmas().get().getTurma().getHorarioEntrada() > (aluno.getSubTurmas().get().getTurma().getCurso().getToleranciaMinutos() + LocalTime.now())){
+                LocalTime horarioDeEntrada = pegarSubTurmaAtual(aluno).getTurma().getHorarioEntrada();
+                int toleranciaDeAtraso = pegarSubTurmaAtual(aluno).getTurma().getCurso().getToleranciaMinutos();
+                if (horarioDeEntrada.plusMinutes(toleranciaDeAtraso).isAfter(LocalTime.now())){
+                    Professor professor = pegarSubTurmaAtual(aluno).getSemestres();
                     Ocorrencia ocorrencia = new Ocorrencia();
                     ocorrencia.setTipo(TipoDeOcorrencia.ATRASO);
                     ocorrencia.setDescricao("Atraso na entrada");
                     ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
                     ocorrencia.setDataHoraCriacao(LocalDateTime.now());
                     ocorrencia.setAluno(aluno);
-
-                    aluno.getSubTurmas().get(2).getTurma().getCurso().;
-
                     ocorrencia.setProfessorResponsavel();
                     ocorrencia.setUnidadeCurricular();
                     ocorrenciaRepository.save(ocorrencia);

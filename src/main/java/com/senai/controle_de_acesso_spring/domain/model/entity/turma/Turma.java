@@ -31,6 +31,6 @@ public class Turma {
     @ManyToOne
     private Curso curso;
 
-    @OneToMany(mappedBy = "turma")
+    @OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubTurma> subTurmas;
 }
