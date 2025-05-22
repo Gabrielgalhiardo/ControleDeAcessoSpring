@@ -23,8 +23,8 @@ public class MqttSubscriber {
             MqttClient client = new MqttClient(BROKER, CLIENT_ID);
             client.connect();
             client.subscribe(TOPICO, (topic, msg) -> {
-                String idAceso = new String(msg.getPayload());
-                controller.criarOcorrenciaDeAtraso(idAceso);
+                String idAcesso = new String(msg.getPayload());
+                controller.criarOcorrenciaDeAtraso(idAcesso);
             });
             System.out.println("Inscrito no tópico MQTT: " + TOPICO);
         } catch (MqttException e) {
