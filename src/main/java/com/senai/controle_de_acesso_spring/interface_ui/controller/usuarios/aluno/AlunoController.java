@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/alunos")
@@ -48,4 +49,21 @@ public class AlunoController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/{id}/validarIdade")
+    public ResponseEntity<String> validarIdadeAluno(@PathVariable Long id, @RequestBody AlunoDto alunoDto){
+        Optional<AlunoDto> alunoOpt = alunoService.buscarAlunoPorId(id);
+
+        if (alunoOpt.isPresent()) {
+            AlunoDto aluno = alunoOpt.get();
+
+            if (alunoService.validarIdadeAluno(id, aluno)){
+                System.out.println("LOG: Aluno é MAIOR de idade");
+                return ResponseEntity.ok("Aluno é MAIOR de idade");
+            } else {
+                System.out.println();
+                return ResponseEntity.ok("Aluno é MENOR de idade");
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
