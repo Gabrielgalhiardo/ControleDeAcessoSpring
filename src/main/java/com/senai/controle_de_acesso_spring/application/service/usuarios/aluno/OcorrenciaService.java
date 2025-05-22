@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDto;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Ocorrencia;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -39,15 +41,23 @@ public class OcorrenciaService {
         Optional<Usuario> usuario = usuarioRepository.findByIdAcesso(idAcesso);
         if (usuario.isPresent()) {
             if (usuario.get() instanceof Aluno aluno){
-                Ocorrencia ocorrencia = new Ocorrencia();
-                ocorrencia.setTipo(TipoDeOcorrencia.ATRASO);
-                ocorrencia.setDescricao("Atraso na entrada");
-                ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
-                ocorrencia.setDataHoraCriacao(LocalDateTime.now());
-                ocorrencia.setAluno(aluno);
-                ocorrenciaRepository.save(ocorrencia);
-                System.out.println("Ocorrência de atraso criada com sucesso!");
-                return "Ocorrência de atraso criada com sucesso!";
+                if (aluno.getSubTurmas().get().getTurma().getHorarioEntrada() > (aluno.getSubTurmas().get().getTurma().getCurso().getToleranciaMinutos() + LocalTime.now())){
+                    Ocorrencia ocorrencia = new Ocorrencia();
+                    ocorrencia.setTipo(TipoDeOcorrencia.ATRASO);
+                    ocorrencia.setDescricao("Atraso na entrada");
+                    ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
+                    ocorrencia.setDataHoraCriacao(LocalDateTime.now());
+                    ocorrencia.setAluno(aluno);
+
+                    aluno.getSubTurmas().get(2).getTurma().getCurso().;
+
+                    ocorrencia.setProfessorResponsavel();
+                    ocorrencia.setUnidadeCurricular();
+                    ocorrenciaRepository.save(ocorrencia);
+                    System.out.println("Ocorrência de atraso criada com sucesso!");
+                    return "Ocorrência de atraso criada com sucesso!";
+                }
+
             } else {
                 System.out.println("Usuário não é um aluno");
                 throw new RuntimeException("Usuário não é um aluno");
