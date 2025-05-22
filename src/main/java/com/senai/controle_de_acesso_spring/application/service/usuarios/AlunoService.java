@@ -7,6 +7,7 @@ import com.senai.controle_de_acesso_spring.domain.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,20 +18,20 @@ public class AlunoService {
     @Autowired
     private AlunoRepository alunoRepository;
 
-    public void cadastrarAluno(AlunoDto alunoDto){
+    public void cadastrarAluno(AlunoDto alunoDto) {
         alunoRepository.save(alunoDto.fromDTO());
     }
 
-    public List<AlunoDto> listarAlunosAtivos(){
-       return alunoRepository.findByStatusDoUsuario(StatusDoUsuario.ATIVO).stream().map(AlunoDto::toDTO).collect(Collectors.toList());
+    public List<AlunoDto> listarAlunosAtivos() {
+        return alunoRepository.findByStatusDoUsuario(StatusDoUsuario.ATIVO).stream().map(AlunoDto::toDTO).collect(Collectors.toList());
     }
 
-    public Optional<AlunoDto> buscarAlunoPorId(Long id){
+    public Optional<AlunoDto> buscarAlunoPorId(Long id) {
         return alunoRepository.findById(id).filter(a -> a.getStatusDoUsuario().equals(StatusDoUsuario.ATIVO)).map(AlunoDto::toDTO);
     }
 
-    public boolean atualizarAluno (Long id, AlunoDto alunoDto){
-        return alunoRepository.findById(id).map(alunoAntigo ->{
+    public boolean atualizarAluno(Long id, AlunoDto alunoDto) {
+        return alunoRepository.findById(id).map(alunoAntigo -> {
             Aluno alunoAtualizado = alunoDto.fromDTO();
             alunoAntigo.setNome(alunoAtualizado.getNome());
             alunoAntigo.setEmail(alunoAtualizado.getEmail());
@@ -41,7 +42,7 @@ public class AlunoService {
         }).orElse(false);
     }
 
-    public boolean inativarAluno(Long id){
+    public boolean inativarAluno(Long id) {
         return alunoRepository.findById(id).map(aluno -> {
             aluno.setStatusDoUsuario(StatusDoUsuario.INATIVO);
             alunoRepository.save(aluno);
@@ -49,6 +50,23 @@ public class AlunoService {
         }).orElse(false);
     }
 
+    public boolean validarIdadeAluno(Long id, AlunoDto alunoDto) {
+        return alunoRepository.findById(id).map(idadeAluno -> {
+            int anoNascimentoAluno = alunoDto.dataNascimento().getYear();
+            int mesNascimentoAluno = alunoDto.dataNascimento().getMonthValue();
+            int diaNascimentoAluno = alunoDto.dataNascimento().getDayOfMonth();
 
+            LocalDate dataAtual = LocalDate.now();
+            int anoAtual = dataAtual.getYear();
+            int mesAtual = dataAtual.getMonthValue();
+            int diaAtual = dataAtual.getDayOfMonth();
 
+            int idade = anoAtual - anoNascimentoAluno;
+
+            if (mesNascimentoAluno > mesAtual || (mesNascimentoAluno == mesAtual && diaNascimentoAluno > diaAtual)){
+                idade--;
+            }
+            return idade >= 18;
+        }).orElse(false);
+    }
 }
