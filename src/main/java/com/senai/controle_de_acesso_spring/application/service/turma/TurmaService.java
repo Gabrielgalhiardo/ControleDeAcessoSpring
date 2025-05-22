@@ -3,7 +3,7 @@ package com.senai.controle_de_acesso_spring.application.service.turma;
 import com.senai.controle_de_acesso_spring.application.dto.turma.TurmaDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Turma;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.TurmaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +15,9 @@ public class TurmaService {
     @Autowired
     private TurmaRepository turmaRepo;
 
+    @Transactional
     public void cadastrarTurma(TurmaDto turmaDto){
-        turmaRepo.save(turmaDto.fromDTO());
+
     }
 
     public List<TurmaDto> listarTurmasAtivos(){
