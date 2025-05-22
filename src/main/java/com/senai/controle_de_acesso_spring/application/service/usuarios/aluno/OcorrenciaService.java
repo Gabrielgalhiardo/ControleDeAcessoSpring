@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +48,31 @@ public class OcorrenciaService {
                 return "Ocorrência de atraso criada com sucesso!";
             } else {
                 System.out.println("Usuário não é um aluno");
+                throw new RuntimeException("Usuário não é um aluno");
+            }
+        } else {
+            System.out.println("Usuário não encontrado");
+            throw new RuntimeException("Usuário não encontrado");
+        }
+    }
+
+    public String criarOcorrenciaDeSaida(String idAcesso) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAcesso(idAcesso);
+        if (usuarioOptional.isPresent()) {
+            if (usuarioOptional.get() instanceof Aluno aluno){
+                Ocorrencia ocorrencia = new Ocorrencia();
+                ocorrencia.setTipo(TipoDeOcorrencia.SAIDA_ANTECIPADA);
+                ocorrencia.setDescricao("Saída Antecipada");
+                ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
+                ocorrencia.setDataHoraCriacao(LocalDateTime.now());
+                ocorrencia.setAluno(aluno);
+                ocorrencia.setProfessorResponsavel(ocorrencia.getProfessorResponsavel());//corrigir isso
+                ocorrencia.setUnidadeCurricular(ocorrencia.getUnidadeCurricular());//corrigir isso
+                ocorrenciaRepository.save(ocorrencia);
+                System.out.println("Ocorrência de saída antecipada criada com sucesso!");
+                return "Ocorrência de saída antecipada criada com sucesso!";
+            } else {
+                System.out.println("Usuário não é aluno");
                 throw new RuntimeException("Usuário não é um aluno");
             }
         } else {
