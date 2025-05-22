@@ -17,7 +17,7 @@ public class MqttSubscriber {
     @Autowired
     private OcorrenciaController controller;
 
-    @PostConstruct
+    @PostConstructEric
     public void iniciarMqtt() {
         try {
             MqttClient client = new MqttClient(BROKER, CLIENT_ID);
