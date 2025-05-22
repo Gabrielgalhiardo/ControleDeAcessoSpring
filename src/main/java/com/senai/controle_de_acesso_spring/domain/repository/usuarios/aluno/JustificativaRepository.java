@@ -1,4 +1,4 @@
-package com.senai.controle_de_acesso_spring.domain.repository;
+package com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Justificativa;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaJustificativa;

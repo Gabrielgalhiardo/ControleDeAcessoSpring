@@ -1,8 +1,8 @@
-package com.senai.controle_de_acesso_spring.interface_ui.controller;
+package com.senai.controle_de_acesso_spring.interface_ui.controller.usuarios;
 
 
-import com.senai.controle_de_acesso_spring.application.dto.users.AQVDto;
-import com.senai.controle_de_acesso_spring.application.service.AQVService;
+import com.senai.controle_de_acesso_spring.application.dto.usuarios.AQVDto;
+import com.senai.controle_de_acesso_spring.application.service.usuarios.AQVService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
