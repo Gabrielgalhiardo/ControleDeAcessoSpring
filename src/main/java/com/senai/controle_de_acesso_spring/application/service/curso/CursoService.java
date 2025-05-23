@@ -1,7 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.curso;
 
 import com.senai.controle_de_acesso_spring.application.dto.curso.CursoDto;
-import com.senai.controle_de_acesso_spring.domain.repository.CursoRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.curso.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

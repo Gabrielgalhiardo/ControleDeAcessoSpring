@@ -1,9 +1,9 @@
-package com.senai.controle_de_acesso_spring.application.service.usuarios;
+package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.AlunoDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
-import com.senai.controle_de_acesso_spring.domain.repository.AlunoRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,7 @@ package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.JustificativaDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Justificativa;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaJustificativa;
-import com.senai.controle_de_acesso_spring.domain.repository.JustificativaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.JustificativaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
