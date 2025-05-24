@@ -14,13 +14,13 @@ public record TurmaDto(Long id,
                        Integer qtdSemestres,
                        Integer qtdAulasPorDia) {
     public static TurmaDto toDTO(Turma t){
-        return new TurmaDto(t.getId(), t.getNome(), t.getPeriodo(), t.getDataInicial(),t.getHorarioEntrada(), t.getQtdSemestres(), t.getQtdAulasPorDia());
+        return new TurmaDto(t.getId(), t.getSiglaDaTurma(), t.getPeriodo(), t.getDataInicial(),t.getHorarioEntrada(), t.getQtdSemestres(), t.getQtdAulasPorDia());
     }
 
     public Turma fromDTO(){
         Turma t = new Turma();
         t.setId(id);
-        t.setNome(nome);
+        t.setSiglaDaTurma(nome);
         t.setPeriodo(periodo);
         t.setDataInicial(dataInicial);
         t.setHorarioEntrada(horarioEntrada);

@@ -1,7 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.service.turma;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.TurmaDto;
-import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Curso;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Turma;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.TurmaRepository;
 import jakarta.transaction.Transactional;
@@ -36,7 +35,7 @@ public class TurmaService {
     public boolean atualizarTurma(Long id, TurmaDto turmaDto){
         return turmaRepo.findById(id).map(turma -> {
             Turma turmaAtualizado = turmaDto.fromDTO();
-            turma.setNome(turmaAtualizado.getNome());
+            turma.setSiglaDaTurma(turmaAtualizado.getSiglaDaTurma());
             turma.setPeriodo(turmaAtualizado.getPeriodo());
             turma.setDataInicial(turmaAtualizado.getDataInicial());
             turma.setHorarioEntrada(turmaAtualizado.getHorarioEntrada());

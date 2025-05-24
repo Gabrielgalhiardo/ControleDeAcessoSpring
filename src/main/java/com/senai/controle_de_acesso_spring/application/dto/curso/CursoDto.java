@@ -11,11 +11,11 @@ public record CursoDto(
     TipoDeCurso tipoDeCurso,
     Integer cargaHoraria,
     Integer toleranciaMinutos,
-    Integer quantidadeDeSemestres,
+//    Integer quantidadeDeSemestres,
     List<UnidadeCurricular> unidadesCurriculares
 ) {
     public static CursoDto toDTO(Curso c){
-        return new CursoDto(c.getId(), c.getTitulo(), c.getTipoDeCurso(), c.getCargaHoraria(), c.getToleranciaMinutos(), c.getQuantidadeDeSemestres(), c.getUnidadesCurriculares());
+        return new CursoDto(c.getId(), c.getTitulo(), c.getTipoDeCurso(), c.getCargaHoraria(), c.getToleranciaMinutos(), c.getUnidadesCurriculares());
     }
 
     public Curso fromDTO(){
@@ -25,7 +25,7 @@ public record CursoDto(
         curso.setTipoDeCurso(tipoDeCurso);
         curso.setCargaHoraria(cargaHoraria);
         curso.setToleranciaMinutos(toleranciaMinutos);
-        curso.setQuantidadeDeSemestres(quantidadeDeSemestres);
+//        curso.set(quantidadeDeSemestres);
         curso.setUnidadesCurriculares(unidadesCurriculares);
         return curso;
     }
