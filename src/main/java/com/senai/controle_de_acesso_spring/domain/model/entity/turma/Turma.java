@@ -5,10 +5,8 @@ import com.senai.controle_de_acesso_spring.domain.model.enums.Periodo;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -18,7 +16,7 @@ public class Turma {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String siglaDaTurma;
 
     @Enumerated(EnumType.STRING)
     private Periodo periodo;

@@ -35,7 +35,7 @@ public class CursoService {
             curso.setTipoDeCurso(cursoDTO.tipoDeCurso());
             curso.setCargaHoraria(cursoDTO.cargaHoraria());
             curso.setToleranciaMinutos(cursoDTO.toleranciaMinutos());
-            curso.setQuantidadeDeSemestres(cursoDTO.quantidadeDeSemestres());
+//            curso.set(cursoDTO.quantidadeDeSemestres());
             curso.setUnidadesCurriculares(cursoDTO.unidadesCurriculares());
             cursoRepository.save(curso);
             return true;
