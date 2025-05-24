@@ -35,7 +35,7 @@ public class TurmaService {
     public boolean atualizarTurma(Long id, TurmaDto turmaDto){
         return turmaRepo.findById(id).map(turma -> {
             Turma turmaAtualizado = turmaDto.fromDTO();
-            turma.setNome(turmaAtualizado.getNome());
+            turma.setSiglaDaTurma(turmaAtualizado.getSiglaDaTurma());
             turma.setPeriodo(turmaAtualizado.getPeriodo());
             turma.setDataInicial(turmaAtualizado.getDataInicial());
             turma.setHorarioEntrada(turmaAtualizado.getHorarioEntrada());
