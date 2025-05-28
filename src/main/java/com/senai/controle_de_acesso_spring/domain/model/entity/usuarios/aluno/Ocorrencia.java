@@ -3,7 +3,6 @@ package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
-import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeCurso;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
 import jakarta.persistence.*;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios;
 
-import com.senai.controle_de_acesso_spring.domain.model.enums.DiaDaSemana;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 @Entity
@@ -13,8 +13,7 @@ public class AulasDoDia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private DiaDaSemana diaDaSemana;
+    private DayOfWeek diaDaSemana;
 
     @ManyToOne
     private HorarioBase horario;
