@@ -31,6 +31,10 @@ public class OcorrenciaController {
         ocorrenciaService.criarOcorrenciaDeAtraso(idAcesso);
     }
 
+    public void criarOcorrenciaDeSaida(String idAcesso) {
+        ocorrenciaService.criarOcorrenciaDeSaida(idAcesso);
+    }
+
     @GetMapping
     public ResponseEntity<List<OcorrenciaDto>> listarOcorrencias() {
         return ResponseEntity.ok(ocorrenciaService.listarOcorrencias());

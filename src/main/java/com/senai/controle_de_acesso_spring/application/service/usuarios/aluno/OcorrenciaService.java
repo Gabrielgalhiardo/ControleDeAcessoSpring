@@ -2,6 +2,8 @@ package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
+import com.senai.controle_de_acesso_spring.application.service.turma.SubTurmaService;
+import com.senai.controle_de_acesso_spring.application.service.turma.horarios.AulaService;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Aula;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
