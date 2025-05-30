@@ -27,6 +27,7 @@ public class HorarioPadraoService {
                 .orElseThrow(() -> new IllegalArgumentException("Semestre não encontrado"));
 
         HorarioPadrao horario = semestre.getHorarioPadrao();
+        repository.save(horario);
 
     }
 
