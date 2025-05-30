@@ -12,11 +12,12 @@ import java.util.List;
 @DiscriminatorValue("ALUNO")
 public class Aluno extends Usuario {
     @OneToMany(mappedBy = "aluno")
-    protected List<Ocorrencia> ocorrencias;
+    private List<Ocorrencia> ocorrencias;
 
     @OneToMany(mappedBy = "aluno")
-    protected List<Justificativa> justificativas;
+    private List<Justificativa> justificativas;
 
-    @ManyToMany
-    protected List<SubTurma> subTurmas;
+    @ManyToOne
+    @JoinColumn(name = "sub_turma_id")
+    private SubTurma subTurma;
 }

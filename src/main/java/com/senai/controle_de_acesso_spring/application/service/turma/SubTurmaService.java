@@ -4,7 +4,6 @@ import com.senai.controle_de_acesso_spring.application.dto.turma.SubTurmaDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Turma;
-import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SubTurmaRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.TurmaRepository;
@@ -91,16 +90,18 @@ public class SubTurmaService {
 
     public static SubTurma pegarSubTurmaAtual(Aluno aluno){
         LocalTime horarioAtual = LocalTime.now();
-        for (SubTurma subTurma : aluno.getSubTurmas()){
-            LocalTime horarioEntrada = subTurma.getTurma().getHorarioEntrada();
-            int minutosPorAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
-            int minutosPorIntervalo = subTurma.getTurma().getCurso().getTipoDeCurso().getIntevarloMinutos();
-            int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
-            LocalTime horarioDeSaida = horarioEntrada.plusMinutes((minutosPorAula*quantidadeDeAulasPorDia)+minutosPorIntervalo);
-            if (horarioAtual.isAfter(horarioEntrada) && horarioAtual.isBefore(horarioDeSaida)) {
-                return subTurma;
-            }
-        }
-        throw new RuntimeException("O aluno não têm nehuma turma nesse horario");
+//        for (SubTurma subTurma : aluno.getSubTurmas()){
+//            LocalTime horarioEntrada = subTurma.getTurma().getHorarioEntrada();
+//            int minutosPorAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
+//            int minutosPorIntervalo = subTurma.getTurma().getCurso().getTipoDeCurso().getIntevarloMinutos();
+//            int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
+//            LocalTime horarioDeSaida = horarioEntrada.plusMinutes((minutosPorAula*quantidadeDeAulasPorDia)+minutosPorIntervalo);
+//            if (horarioAtual.isAfter(horarioEntrada) && horarioAtual.isBefore(horarioDeSaida)) {
+//                return subTurma;
+//            }
+//        }
+        return aluno.getSubTurma();
+
+//        throw new RuntimeException("O aluno não têm nehuma turma nesse horario");
     }
 }
