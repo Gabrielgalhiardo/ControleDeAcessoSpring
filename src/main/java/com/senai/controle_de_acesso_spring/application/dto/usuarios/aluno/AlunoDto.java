@@ -7,17 +7,21 @@ import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Oc
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 public record AlunoDto(
         Long id,
         String nome,
         String cpf,
         LocalDate dataNascimento,
-        String email
+        String email,
+        List<Justificativa> justificativas,
+        List<Ocorrencia> ocorrencias,
+        SubTurma subTurmas
 ){
     public static AlunoDto toDTO(Aluno a){
-        return new AlunoDto(a.getId(), a.getNome(), a.getCpf(), a.getDataNascimento(), a.getEmail());
+        return new AlunoDto(a.getId(), a.getNome(), a.getCpf(), a.getDataNascimento(), a.getEmail(),
+                a.getJustificativas(), a.getOcorrencias(), a.getSubTurma());
     }
 
     public Aluno fromDTO(){
@@ -30,9 +34,9 @@ public record AlunoDto(
         a.setStatusDoUsuario(StatusDoUsuario.ATIVO);
         a.setIdAcesso("");
         a.setSenha("");
-        a.setJustificativas(new ArrayList<Justificativa>());
-        a.setOcorrencias(new ArrayList<Ocorrencia>());
-        a.setSubTurmas(new ArrayList<SubTurma>());
+        a.setJustificativas(justificativas);
+        a.setOcorrencias(ocorrencias);
+        a.setSubTurma(subTurmas);
 
         return a;
     }
