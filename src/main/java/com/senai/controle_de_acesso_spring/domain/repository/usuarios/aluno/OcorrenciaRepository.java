@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface OcorrenciaRepository extends JpaRepository<Ocorrencia, Long> {
-    List<Ocorrencia> findByStatus(StatusDaOcorrencia statusDaOcorrencia);
+    List<Ocorrencia> findByStatusDaOcorrencia(StatusDaOcorrencia statusDaOcorrencia);
 }
