@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.AlunoDto;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.AlunoRepository;
@@ -25,6 +26,15 @@ public class AlunoService {
     public List<AlunoDto> listarAlunosAtivos() {
         return alunoRepository.findByStatusDoUsuario(StatusDoUsuario.ATIVO).stream().map(AlunoDto::toDTO).collect(Collectors.toList());
     }
+
+    public void associarAluno(SubTurma subTurma, List<Long> alunosIds) {
+        List<Aluno> alunos = alunosIds.stream()
+                .map(alunoId -> alunoRepository.findById(alunoId)
+                        .orElseThrow(() -> new RuntimeException("Aluno não encontrado com ID: " + alunoId)))
+                .collect(Collectors.toList());
+        subTurma.setAlunos(alunos);
+    }
+
 
     public Optional<AlunoDto> buscarAlunoPorId(Long id) {
         return alunoRepository.findById(id).filter(a -> a.getStatusDoUsuario().equals(StatusDoUsuario.ATIVO)).map(AlunoDto::toDTO);

@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.curso;
 
 import com.senai.controle_de_acesso_spring.application.dto.curso.CursoDto;
+import com.senai.controle_de_acesso_spring.application.dto.curso.UnidadeCurricularDto;
 import com.senai.controle_de_acesso_spring.domain.repository.curso.CursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,9 @@ public class CursoService {
             curso.setCargaHoraria(cursoDTO.cargaHoraria());
             curso.setToleranciaMinutos(cursoDTO.toleranciaMinutos());
 //            curso.set(cursoDTO.quantidadeDeSemestres());
-            curso.setUnidadesCurriculares(cursoDTO.unidadesCurriculares());
+            curso.setUnidadesCurriculares(cursoDTO.unidadesCurriculares().stream()
+                    .map(UnidadeCurricularDto::fromDTO)
+                    .toList());
             cursoRepository.save(curso);
             return true;
         }).orElse(false);
