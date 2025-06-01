@@ -15,13 +15,15 @@ public record AlunoDto(
         String cpf,
         LocalDate dataNascimento,
         String email,
+        String idAcesso,
+        String senha,
         List<Justificativa> justificativas,
         List<Ocorrencia> ocorrencias,
         SubTurma subTurmas
 ){
     public static AlunoDto toDTO(Aluno a){
         return new AlunoDto(a.getId(), a.getNome(), a.getCpf(), a.getDataNascimento(), a.getEmail(),
-                a.getJustificativas(), a.getOcorrencias(), a.getSubTurma());
+                a.getIdAcesso(), a.getSenha(), a.getJustificativas(), a.getOcorrencias(), a.getSubTurma());
     }
 
     public Aluno fromDTO(){
@@ -32,8 +34,8 @@ public record AlunoDto(
         a.setEmail(email);
         a.setDataNascimento(dataNascimento);
         a.setStatusDoUsuario(StatusDoUsuario.ATIVO);
-        a.setIdAcesso("");
-        a.setSenha("");
+        a.setIdAcesso(idAcesso);
+        a.setSenha(senha);
         a.setJustificativas(justificativas);
         a.setOcorrencias(ocorrencias);
         a.setSubTurma(subTurmas);

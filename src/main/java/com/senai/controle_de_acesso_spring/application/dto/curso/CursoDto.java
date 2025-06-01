@@ -12,10 +12,18 @@ public record CursoDto(
     Integer cargaHoraria,
     Integer toleranciaMinutos,
 //    Integer quantidadeDeSemestres,
-    List<UnidadeCurricular> unidadesCurriculares
+    List<UnidadeCurricularDto> unidadesCurriculares
 ) {
     public static CursoDto toDTO(Curso c){
-        return new CursoDto(c.getId(), c.getTitulo(), c.getTipoDeCurso(), c.getCargaHoraria(), c.getToleranciaMinutos(), c.getUnidadesCurriculares());
+        return new CursoDto(
+                c.getId(),
+                c.getTitulo(),
+                c.getTipoDeCurso(),
+                c.getCargaHoraria(),
+                c.getToleranciaMinutos(),
+                c.getUnidadesCurriculares().stream()
+                        .map(UnidadeCurricularDto::toDTO)
+                        .toList());
     }
 
     public Curso fromDTO(){
@@ -26,7 +34,9 @@ public record CursoDto(
         curso.setCargaHoraria(cargaHoraria);
         curso.setToleranciaMinutos(toleranciaMinutos);
 //        curso.set(quantidadeDeSemestres);
-        curso.setUnidadesCurriculares(unidadesCurriculares);
+        curso.setUnidadesCurriculares(unidadesCurriculares.stream()
+                .map(UnidadeCurricularDto::fromDTO)
+                .toList());
         return curso;
     }
 

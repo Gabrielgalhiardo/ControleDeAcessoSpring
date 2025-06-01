@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/horarioSemanal")
 public class HorarioSemanalController {
@@ -16,8 +18,8 @@ public class HorarioSemanalController {
     private HorarioSemanalService horarioSemanalService;
 
     @PostMapping
-    public ResponseEntity<Void> cadastrarHorariosSemanais(HorarioSemanalDTO horarioSemanalDTO) {
-        horarioSemanalService.cadastrarHorariosSemanais(horarioSemanalDTO);
+    public ResponseEntity<Void> cadastrarHorariosSemanais(List<HorarioSemanalDTO> horarioSemanalDTOs) {
+        horarioSemanalService.cadastrarHorariosSemanais(horarioSemanalDTOs);
         return ResponseEntity.status(201).build();
     }
 }

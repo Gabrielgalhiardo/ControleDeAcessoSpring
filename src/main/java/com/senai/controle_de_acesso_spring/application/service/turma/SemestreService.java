@@ -24,7 +24,7 @@ public class SemestreService {
     private SubTurmaRepository subTurmaRepository;
 
     @Transactional
-    public void criarSemestre(Long subTurmaId) {
+    public SemestreDTO criarSemestre(Long subTurmaId) {
         SubTurma subTurma = subTurmaRepository.findById(subTurmaId)
                 .orElseThrow(() -> new RuntimeException("SubTurma não encontrada"));
 
@@ -39,6 +39,7 @@ public class SemestreService {
         );
         semestre.setHorariosSemanais(new ArrayList<>());
         semestreRepository.save(semestre);
+        return SemestreDTO.toDTO(semestre);
     }
 
     public Optional<SemestreDTO> buscarPorId(Long id) {

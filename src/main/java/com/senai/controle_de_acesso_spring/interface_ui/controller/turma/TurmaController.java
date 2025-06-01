@@ -16,7 +16,7 @@ public class TurmaController {
 
     @PostMapping
     public ResponseEntity<Void> cadastrarTurma(@RequestBody TurmaDto turmaDto){
-        turmaService.cadastrarTurma(turmaDto);
+        turmaService.salvarTurma(turmaDto);
         return ResponseEntity.ok().build();
     }
 

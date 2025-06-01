@@ -1,8 +1,16 @@
 package com.senai.controle_de_acesso_spring.application.service.turma;
 
+import com.senai.controle_de_acesso_spring.application.dto.turma.SubTurmaDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.TurmaDto;
+import com.senai.controle_de_acesso_spring.application.service.curso.CursoService;
+import com.senai.controle_de_acesso_spring.application.service.usuarios.aluno.AlunoService;
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Curso;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Turma;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.TurmaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.AlunoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.TurmaRepository;
@@ -18,9 +26,41 @@ public class TurmaService {
     @Autowired
     private TurmaRepository turmaRepo;
 
+    @Autowired
+    private SubTurmaService subTurmaService;
+
+    @Autowired
+    private CursoService cursoService;
+
+//    @Transactional
+//    public void cadastrarTurma(TurmaDto turmaDto){
+//        turmaRepo.save(turmaDto.fromDTO());
+//    }
+
     @Transactional
-    public void cadastrarTurma(TurmaDto turmaDto){
-        turmaRepo.save(turmaDto.fromDTO());
+    public Turma salvarTurma(TurmaDto dto) {
+        Turma turma = new Turma();
+        turma.setSiglaDaTurma(dto.siglaDaTurma());
+        turma.setPeriodo(dto.periodo());
+        turma.setDataInicial(dto.dataInicial());
+        turma.setHorarioEntrada(dto.horarioEntrada());
+        turma.setQtdSemestres(dto.qtdSemestres());
+        turma.setQtdAulasPorDia(dto.qtdAulasPorDia());
+
+        Curso curso = cursoService.buscarPorId(dto.curso().getId())
+                .orElseThrow(() -> new RuntimeException("Curso não encontrado: " ))
+                .fromDTO();
+        turma.setCurso(curso);
+
+
+
+//        for(SubTurmaDTO subTurmaDTO : dto.subTurmas()) {
+//            subTurmaService.criarSubTurma(subTurmaDTO);
+//        }
+//        turma.setSubTurmas(dto.subTurmas().stream()
+//                .map(SubTurmaDTO::fromDTO).collect(Collectors.toList()));
+
+        return turmaRepo.save(turma);
     }
 
     public List<TurmaDto> listarTurmasAtivos(){

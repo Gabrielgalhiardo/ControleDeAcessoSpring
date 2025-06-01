@@ -22,6 +22,6 @@ public class Curso {
     private Integer cargaHoraria;
     private Integer toleranciaMinutos;
 
-    @OneToMany(mappedBy = "curso")
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL)
     private List<UnidadeCurricular> unidadesCurriculares;
 }

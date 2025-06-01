@@ -18,12 +18,15 @@ public class HorarioSemanalService {
     @Autowired
     private SemestreRepository semestreRepository;
 
-    public void cadastrarHorariosSemanais(HorarioSemanalDTO horarioSemanalDTO){
-        Semestre semestre = semestreRepository.findById(horarioSemanalDTO.semestreId())
+    public List<HorarioSemanalDTO> cadastrarHorariosSemanais(List<HorarioSemanalDTO> horarioSemanalDTO){
+        Semestre semestre = semestreRepository.findById(horarioSemanalDTO.getLast().semestreId())
                 .orElseThrow(() -> new IllegalArgumentException("Semestre não encontrado"));
 
         List<HorarioSemanal> listaHorariosSemanais = semestre.getHorariosSemanais();
 
         horarioSemanalRepository.saveAll(listaHorariosSemanais);
+        return listaHorariosSemanais.stream()
+                .map(HorarioSemanalDTO::toDTO)
+                .toList();
     }
 }

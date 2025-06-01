@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 
+import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioPadraoDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
@@ -22,13 +23,17 @@ public class HorarioPadraoService {
     private SemestreRepository semestreRepository;
 
     @Transactional
-    public void salvarHorarioPadrao(Long semestreId, HorarioPadraoDTO dto) {
+    public HorarioPadrao salvarHorarioPadrao(Long semestreId, HorarioPadraoDTO horarioPadraoDTO) {
         Semestre semestre = semestreRepository.findById(semestreId)
                 .orElseThrow(() -> new IllegalArgumentException("Semestre não encontrado"));
 
         HorarioPadrao horario = semestre.getHorarioPadrao();
+        horario.setSemestre(semestre);
+        horario.setListaDeAulasDoDia(horarioPadraoDTO.listaDeAulasDoDia().stream()
+                .map(AulasDoDiaDTO::fromDTO).toList());
         repository.save(horario);
 
+        return horario;
     }
 
     public List<HorarioPadraoDTO> listar() {
