@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.turma;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.SemestreDTO;
+import com.senai.controle_de_acesso_spring.application.service.turma.horarios.HorarioPadraoService;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SemestreRepository;
@@ -23,12 +24,16 @@ public class SemestreService {
     @Autowired
     private SubTurmaRepository subTurmaRepository;
 
+    @Autowired
+    private HorarioPadraoService horarioPadraoService;
+
     @Transactional
-    public SemestreDTO criarSemestre(Long subTurmaId) {
+    public void criarSemestre(Long subTurmaId) {
         SubTurma subTurma = subTurmaRepository.findById(subTurmaId)
                 .orElseThrow(() -> new RuntimeException("SubTurma não encontrada"));
 
         Semestre semestre = new Semestre();
+        subTurma.setSemestres(new ArrayList<>());
         subTurma.getSemestres().add(semestre);
         semestre.setNumero(subTurma.getSemestres().size());
         semestre.setSubTurma(subTurma);
@@ -37,9 +42,9 @@ public class SemestreService {
                         subTurma.getTurma().getSiglaDaTurma() +
                         subTurma.getTurma().getPeriodo().getSigla()
         );
+        semestre.setHorarioPadrao(horarioPadraoService.criarHorarioPadraoVazio(semestre));
         semestre.setHorariosSemanais(new ArrayList<>());
         semestreRepository.save(semestre);
-        return SemestreDTO.toDTO(semestre);
     }
 
     public Optional<SemestreDTO> buscarPorId(Long id) {

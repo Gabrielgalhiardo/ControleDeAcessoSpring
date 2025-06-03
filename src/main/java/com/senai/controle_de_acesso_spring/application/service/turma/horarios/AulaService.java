@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 
+import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulaDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Aula;
@@ -8,6 +9,8 @@ import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Ho
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioSemanal;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeCurso;
+import com.senai.controle_de_acesso_spring.domain.repository.turma.horarios.AulaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,14 @@ import java.util.Optional;
 
 @Service
 public class AulaService {
+
+    @Autowired
+    private AulaRepository aulaRepository;
+
+    public Aula salvarAula(AulaDTO aulaDTO){
+        return aulaRepository.save(aulaDTO.fromDTO());
+    }
+
 
     public static Aula pegarAulaAtualPelaSubTurma(SubTurma subTurma) {
         LocalTime horarioEntrada = subTurma.getTurma().getHorarioEntrada();
@@ -109,4 +120,5 @@ public class AulaService {
 
         throw new RuntimeException("Nenhuma aula acontecendo neste momento.");
     }
+
 }

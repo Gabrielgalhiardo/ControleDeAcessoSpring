@@ -9,6 +9,7 @@ import com.senai.controle_de_acesso_spring.domain.model.enums.Periodo;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 

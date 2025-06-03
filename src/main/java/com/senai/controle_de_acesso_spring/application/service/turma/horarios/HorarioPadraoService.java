@@ -3,6 +3,8 @@ package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioPadraoDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioBase;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SemestreRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.horarios.HorarioPadraoRepository;
@@ -22,18 +24,36 @@ public class HorarioPadraoService {
     @Autowired
     private SemestreRepository semestreRepository;
 
+    @Autowired
+    private HorarioBaseService horarioBaseService;
+
+    @Autowired
+    private AulasDoDiaService aulasDoDiaService;
+
     @Transactional
     public HorarioPadrao salvarHorarioPadrao(Long semestreId, HorarioPadraoDTO horarioPadraoDTO) {
         Semestre semestre = semestreRepository.findById(semestreId)
                 .orElseThrow(() -> new IllegalArgumentException("Semestre não encontrado"));
+        List<AulasDoDia> aulasDoDia = aulasDoDiaService.adicionarAulaDoDia(horarioPadraoDTO.listaDeAulasDoDia().stream()
+                .map(AulasDoDiaDTO::fromDTO).toList());
 
         HorarioPadrao horario = semestre.getHorarioPadrao();
         horario.setSemestre(semestre);
-        horario.setListaDeAulasDoDia(horarioPadraoDTO.listaDeAulasDoDia().stream()
-                .map(AulasDoDiaDTO::fromDTO).toList());
+        horario.setListaDeAulasDoDia(aulasDoDia);
         repository.save(horario);
+        horarioBaseService.preencherHorario(horario, aulasDoDia.stream()
+                .map(AulasDoDiaDTO::toDTO).toList());
 
         return horario;
+    }
+
+    @Transactional
+    public HorarioPadrao criarHorarioPadraoVazio(Semestre semestre){
+        HorarioPadrao horarioPadrao = new HorarioPadrao();
+        horarioPadrao.setSemestre(semestre);
+        horarioPadrao.setListaDeAulasDoDia(List.of());
+        repository.save(horarioPadrao);
+        return horarioPadrao;
     }
 
     public List<HorarioPadraoDTO> listar() {
@@ -51,6 +71,8 @@ public class HorarioPadraoService {
         if (optional.isEmpty()) return false;
 
         HorarioPadrao horario = optional.get();
+        horarioBaseService.preencherHorario(horario, dto.listaDeAulasDoDia());
+        repository.save(horario);
         return true;
     }
 

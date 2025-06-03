@@ -3,6 +3,7 @@ package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.horarios.AulasDoDiaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,14 @@ public class AulasDoDiaService {
     @Autowired
     private AulasDoDiaRepository aulasDoDiaRepo;
 
-        public void adicionarAulaDoDia(AulasDoDiaDTO aulasDoDiaDTO){
-            aulasDoDiaRepo.save(aulasDoDiaDTO.fromDTO());
-        }
+    @Transactional
+    public AulasDoDia adicionarAulaDoDia(AulasDoDiaDTO aulasDoDiaDTO){
+            return aulasDoDiaRepo.save(aulasDoDiaDTO.fromDTO());
+    }
+    @Transactional
+    public List<AulasDoDia> adicionarAulaDoDia(List<AulasDoDia> aulasDoDia){
+            return aulasDoDiaRepo.saveAll(aulasDoDia);
+    }
 
         public List<AulasDoDiaDTO> listarAulasDoDia(){
             return aulasDoDiaRepo.findAll()
