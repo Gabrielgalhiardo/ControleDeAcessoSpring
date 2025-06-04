@@ -37,8 +37,8 @@ public class CursoService {
             curso.setCargaHoraria(cursoDTO.cargaHoraria());
             curso.setToleranciaMinutos(cursoDTO.toleranciaMinutos());
 //            curso.set(cursoDTO.quantidadeDeSemestres());
-            curso.setUnidadesCurriculares(cursoDTO.unidadesCurriculares().stream()
-                    .map(UnidadeCurricularDto::fromDTO)
+            curso.setUnidadesCurriculares(cursoDTO.unidadesCurricularesDTO().stream()
+                    .map(unidadeCurricularDto -> unidadeCurricularDto.fromDTO(curso))
                     .toList());
             cursoRepository.save(curso);
             return true;

@@ -10,14 +10,12 @@ import java.util.stream.Collectors;
 public record AulasDoDiaDTO(
         Long id,
         DayOfWeek diaDaSemana,
-        HorarioBaseDTO horarioBaseDTO,
         List<AulaDTO> aulas
 ) {
     public static AulasDoDiaDTO toDTO(AulasDoDia d) {
         return new AulasDoDiaDTO(
                 d.getId(),
                 d.getDiaDaSemana(),
-                HorarioBaseDTO.toDTO(d.getHorario()),
                 d.getAulas().stream().map(AulaDTO::toDTO).toList()
         );
     }
@@ -25,7 +23,6 @@ public record AulasDoDiaDTO(
     public AulasDoDia fromDTO() {
         AulasDoDia dia = new AulasDoDia();
         dia.setDiaDaSemana(diaDaSemana);
-        dia.setHorario(HorarioBaseDTO.fromDTO(horarioBaseDTO));
         dia.setAulas(aulas.stream().map(AulaDTO::fromDTO).collect(Collectors.toList()));
         return dia;
     }

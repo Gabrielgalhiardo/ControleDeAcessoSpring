@@ -15,7 +15,7 @@ public class AulasDoDia {
 
     private DayOfWeek diaDaSemana;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private HorarioBase horario;
 
     @OneToMany(mappedBy = "aulasDia", cascade = CascadeType.ALL, orphanRemoval = true)

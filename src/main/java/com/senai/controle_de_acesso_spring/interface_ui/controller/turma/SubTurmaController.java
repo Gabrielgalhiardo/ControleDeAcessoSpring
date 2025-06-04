@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.interface_ui.controller.turma;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.SubTurmaDTO;
+import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioPadraoDTO;
 import com.senai.controle_de_acesso_spring.application.service.turma.SubTurmaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ public class SubTurmaController {
     private SubTurmaService service;
 
     @PostMapping("/{turmaId}")
-    public ResponseEntity<Void> criar(@PathVariable Long turmaId) {
-        service.criarSubTurma(turmaId);
+    public ResponseEntity<Void> criar(@PathVariable Long turmaId, @RequestBody HorarioPadraoDTO dto) {
+        service.criarSubTurma(turmaId, dto);
         return ResponseEntity.ok().build();
     }
 

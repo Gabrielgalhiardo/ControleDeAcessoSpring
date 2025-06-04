@@ -10,7 +10,7 @@ public class UnidadeCurricularService {
     @Autowired
     private UnidadeCurricularRepository unidadeCurricularRepository;
 
-    public void cadastrarUnidadeCurricular(UnidadeCurricularDto unidadeCurricularDto) {
-        unidadeCurricularRepository.save(unidadeCurricularDto.fromDTO());
-    }
+//    public void cadastrarUnidadeCurricular(UnidadeCurricularDto unidadeCurricularDto) {
+//        unidadeCurricularRepository.save(unidadeCurricularDto.fromDTO(unidade));
+//    }
 }

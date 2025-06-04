@@ -1,6 +1,8 @@
 package com.senai.controle_de_acesso_spring.application.service.turma;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.SubTurmaDTO;
+import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
+import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioPadraoDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioSemanalDTO;
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.AlunoDto;
 import com.senai.controle_de_acesso_spring.application.service.turma.horarios.HorarioPadraoService;
@@ -147,7 +149,7 @@ public class SubTurmaService {
 //        subTurmaRepository.save(subTurma);
 //    }
     @Transactional
-    public void criarSubTurma(Long turmaId) {
+    public void criarSubTurma(Long turmaId, HorarioPadraoDTO horarioPadraoDTO) {
         Turma turma = turmaRepository.findById(turmaId)
                 .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
 
@@ -169,7 +171,8 @@ public class SubTurmaService {
         );
         semestre.setSubTurma(subTurma);
 
-        HorarioPadrao horarioPadrao = horarioPadraoService.criarHorarioPadraoVazio(semestre);
+        List<AulasDoDiaDTO> aulasDoDiaDTOList = horarioPadraoDTO.listaDeAulasDoDia();
+        HorarioPadrao horarioPadrao = horarioPadraoService.criarHorarioPadraoVazio(semestre, aulasDoDiaDTOList);
         horarioPadrao.setSemestre(semestre);
         semestre.setHorarioPadrao(horarioPadrao);
 

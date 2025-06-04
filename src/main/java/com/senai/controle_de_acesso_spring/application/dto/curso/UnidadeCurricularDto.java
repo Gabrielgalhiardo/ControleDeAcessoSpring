@@ -12,7 +12,6 @@ public record UnidadeCurricularDto(
         Long id,
         String nome,
         Integer cargaHorariaTotal,
-        Curso curso,
         List<Professor>professores
 ) {
     public static UnidadeCurricularDto toDTO(UnidadeCurricular u) {
@@ -20,12 +19,11 @@ public record UnidadeCurricularDto(
                 u.getId(),
                 u.getNome(),
                 u.getCargaHorariaTotal(),
-                u.getCurso(),
                 u.getProfessores()
         );
     }
 
-    public UnidadeCurricular fromDTO() {
+    public UnidadeCurricular fromDTO(Curso curso) {
         UnidadeCurricular unidadeCurricular = new UnidadeCurricular();
         unidadeCurricular.setId(id);
         unidadeCurricular.setNome(nome);

@@ -9,14 +9,14 @@ import java.util.List;
 
 public record HorarioSemanalDTO(
         Long id,
-        SemestreDTO semestreDTO,
+        Long semestreId,
         LocalDate semanaReferencia,
         List<AulasDoDiaDTO> listaDeAulasDoDia
 ) {
     public static HorarioSemanalDTO toDTO(HorarioSemanal h) {
         return new HorarioSemanalDTO(
                 h.getId(),
-                SemestreDTO.toDTO(h.getSemestre()),
+                h.getSemestre() != null ? h.getSemestre().getId() : null,
                 h.getSemanaReferencia(),
                 h.getListaDeAulasDoDia().stream().map(AulasDoDiaDTO::toDTO).toList()
         );
@@ -24,7 +24,6 @@ public record HorarioSemanalDTO(
     public HorarioSemanal fromDTO() {
         HorarioSemanal horario = new HorarioSemanal();
         horario.setSemanaReferencia(semanaReferencia);
-        horario.setSemestre(SemestreDTO.fromDTO(semestreDTO));
         horario.setListaDeAulasDoDia(
                 listaDeAulasDoDia.stream().map(AulasDoDiaDTO::fromDTO).toList()
         );

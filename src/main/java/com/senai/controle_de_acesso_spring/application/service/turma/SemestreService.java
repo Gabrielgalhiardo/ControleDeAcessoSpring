@@ -4,6 +4,7 @@ import com.senai.controle_de_acesso_spring.application.dto.turma.SemestreDTO;
 import com.senai.controle_de_acesso_spring.application.service.turma.horarios.HorarioPadraoService;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SemestreRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SubTurmaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,8 @@ public class SemestreService {
                         subTurma.getTurma().getSiglaDaTurma() +
                         subTurma.getTurma().getPeriodo().getSigla()
         );
-        semestre.setHorarioPadrao(horarioPadraoService.criarHorarioPadraoVazio(semestre));
         semestre.setHorariosSemanais(new ArrayList<>());
+        semestre.setHorarioPadrao(new HorarioPadrao());
         semestreRepository.save(semestre);
     }
 

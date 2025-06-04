@@ -27,7 +27,7 @@ public class HorarioSemanalService {
     private AulasDoDiaService aulasDoDiaService;
 
     public List<HorarioSemanalDTO> cadastrarHorariosSemanais(List<HorarioSemanalDTO> horarioSemanalDTOS){
-        Semestre SemestreEncontrado = semestreRepository.findById(horarioSemanalDTOS.getLast().semestreDTO().id())
+        Semestre SemestreEncontrado = semestreRepository.findById(horarioSemanalDTOS.getLast().semestreId())
                 .orElseThrow(() -> new IllegalArgumentException("Semestre não encontrado"));
 
 

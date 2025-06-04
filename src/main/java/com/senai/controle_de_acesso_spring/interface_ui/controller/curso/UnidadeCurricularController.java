@@ -14,7 +14,7 @@ public class UnidadeCurricularController {
     private UnidadeCurricularService unidadeCurricularService;
 
     public ResponseEntity<Void> cadastrarUnidadeCurricular(UnidadeCurricularDto unidadeCurricularDto) {
-        unidadeCurricularService.cadastrarUnidadeCurricular(unidadeCurricularDto);
+//        unidadeCurricularService.cadastrarUnidadeCurricular(unidadeCurricularDto);
         return ResponseEntity.status(201).build();
     }
 }

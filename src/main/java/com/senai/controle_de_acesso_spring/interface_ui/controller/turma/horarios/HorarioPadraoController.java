@@ -17,6 +17,7 @@ public class HorarioPadraoController {
 
     @PostMapping("/{semestreId}")
     public ResponseEntity<Void> salvar(@PathVariable Long semestreId, @RequestBody HorarioPadraoDTO dto) {
+        System.out.println(semestreId);
         service.salvarHorarioPadrao(semestreId, dto);
         return ResponseEntity.ok().build();
     }

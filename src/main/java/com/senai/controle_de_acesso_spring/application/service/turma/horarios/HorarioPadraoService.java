@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
+import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioBaseDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioPadraoDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
@@ -12,8 +13,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class HorarioPadraoService {
@@ -37,6 +40,8 @@ public class HorarioPadraoService {
         List<AulasDoDia> aulasDoDia = aulasDoDiaService.adicionarAulaDoDia(horarioPadraoDTO.listaDeAulasDoDia().stream()
                 .map(AulasDoDiaDTO::fromDTO).toList());
 
+        System.out.println();
+
         HorarioPadrao horario = semestre.getHorarioPadrao();
         horario.setSemestre(semestre);
         horario.setListaDeAulasDoDia(aulasDoDia);
@@ -48,10 +53,11 @@ public class HorarioPadraoService {
     }
 
     @Transactional
-    public HorarioPadrao criarHorarioPadraoVazio(Semestre semestre){
+    public HorarioPadrao criarHorarioPadraoVazio(Semestre semestre, List<AulasDoDiaDTO> aulasDoDiaDTOS){
         HorarioPadrao horarioPadrao = new HorarioPadrao();
         horarioPadrao.setSemestre(semestre);
-        horarioPadrao.setListaDeAulasDoDia(List.of());
+        horarioPadrao.setListaDeAulasDoDia(aulasDoDiaDTOS.stream()
+                .map(AulasDoDiaDTO::fromDTO).collect(Collectors.toList()));
         repository.save(horarioPadrao);
         return horarioPadrao;
     }
