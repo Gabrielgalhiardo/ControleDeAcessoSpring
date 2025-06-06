@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.dto.turma.horario;
 
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
+import com.senai.controle_de_acesso_spring.domain.model.enums.DiaDaSemana;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 public record AulasDoDiaDTO(
         Long id,
-        DayOfWeek diaDaSemana,
+        DiaDaSemana diaDaSemana,
         List<AulaDTO> aulas
 ) {
     public static AulasDoDiaDTO toDTO(AulasDoDia d) {
@@ -23,7 +24,7 @@ public record AulasDoDiaDTO(
     public AulasDoDia fromDTO() {
         AulasDoDia dia = new AulasDoDia();
         dia.setDiaDaSemana(diaDaSemana);
-        dia.setAulas(aulas.stream().map(AulaDTO::fromDTO).collect(Collectors.toList()));
+//        dia.setAulas(aulas.stream().map(a -> a.fromDTO()).collect(Collectors.toList()));
         return dia;
     }
 }

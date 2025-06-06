@@ -7,6 +7,7 @@ import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SemestreRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SubTurmaRepository;
+import com.senai.controle_de_acesso_spring.domain.service.HorarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,7 @@ public class SemestreService {
     private SubTurmaRepository subTurmaRepository;
 
     @Autowired
-    private HorarioPadraoService horarioPadraoService;
+    private HorarioService horarioService;
 
     @Transactional
     public void criarSemestre(Long subTurmaId) {
@@ -44,7 +45,7 @@ public class SemestreService {
                         subTurma.getTurma().getPeriodo().getSigla()
         );
         semestre.setHorariosSemanais(new ArrayList<>());
-        semestre.setHorarioPadrao(new HorarioPadrao());
+        semestre.setHorarioPadrao(horarioService.criarHorarioPadraoVazio(semestre));
         semestreRepository.save(semestre);
     }
 

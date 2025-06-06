@@ -17,8 +17,8 @@ public class SubTurmaController {
     private SubTurmaService service;
 
     @PostMapping("/{turmaId}")
-    public ResponseEntity<Void> criar(@PathVariable Long turmaId, @RequestBody HorarioPadraoDTO dto) {
-        service.criarSubTurma(turmaId, dto);
+    public ResponseEntity<Void> criar(@PathVariable Long turmaId) {
+        service.criarSubTurma(turmaId);
         return ResponseEntity.ok().build();
     }
 

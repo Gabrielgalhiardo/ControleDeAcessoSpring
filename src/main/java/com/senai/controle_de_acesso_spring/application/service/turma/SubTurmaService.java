@@ -16,6 +16,7 @@ import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Ho
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SubTurmaRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.TurmaRepository;
+import com.senai.controle_de_acesso_spring.domain.service.HorarioService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,10 @@ public class SubTurmaService {
     private TurmaRepository turmaRepository;
 
     @Autowired
-    private HorarioPadraoService horarioPadraoService;
+    private HorarioService horarioService;
 
     @Autowired
     private AlunoService alunoService;
-    @Autowired
-    private HorarioSemanalService horarioSemanalService;
 
 //    @Transactional
 //    public void criarSubTurma(SubTurmaDTO subTurmaDTO) {
@@ -148,44 +147,83 @@ public class SubTurmaService {
 //
 //        subTurmaRepository.save(subTurma);
 //    }
-    @Transactional
-    public void criarSubTurma(Long turmaId, HorarioPadraoDTO horarioPadraoDTO) {
-        Turma turma = turmaRepository.findById(turmaId)
-                .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+//    @Transactional
+//    public void criarSubTurma(Long turmaId) {
+//        Turma turma = turmaRepository.findById(turmaId)
+//                .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+//
+//        SubTurma subTurma = new SubTurma();
+//        subTurma.setNome("Turma " + (turma.getSubTurmas().size() + 1));
+//        subTurma.setTurma(turma);
+//
+//        turma.getSubTurmas().add(subTurma);
+//
+//        Semestre semestre = new Semestre();
+//        subTurma.setSemestres(new ArrayList<>());
+//        subTurma.getSemestres().add(semestre);
+//
+//        semestre.setNumero(subTurma.getSemestres().size());
+//        semestre.setNomeDaTurma(
+//                subTurma.getSemestres().size() + " - " +
+//                        subTurma.getTurma().getSiglaDaTurma() + " - " +
+//                        subTurma.getTurma().getPeriodo().getSigla()
+//        );
+//        semestre.setSubTurma(subTurma);
+//
+////        List<AulasDoDiaDTO> aulasDoDiaDTOList = horarioPadraoDTO.listaDeAulasDoDia();
+////        HorarioPadrao horarioPadrao = horarioPadraoService.criarHorarioPadraoVazio(semestre);
+////        horarioPadrao.setSemestre(semestre);
+//        semestre.setHorarioPadrao(new HorarioPadrao());
+//
+//        semestre.setHorariosSemanais(new ArrayList<>());
+//        List<Aluno> alunos = alunoService.listarAlunosAtivos().stream()
+//                .map(AlunoDto::fromDTO)
+//                .filter(aluno -> alunoService.buscarAlunoPorId(aluno.getId()).isPresent())
+//                .collect(Collectors.toList());
+//        alunos.forEach(aluno -> aluno.setSubTurma(subTurma));
+//        subTurma.setAlunos(alunos);
+//
+//        subTurmaRepository.save(subTurma);
+//    }
 
-        SubTurma subTurma = new SubTurma();
-        subTurma.setNome("Turma " + (turma.getSubTurmas().size() + 1));
-        subTurma.setTurma(turma);
+@Transactional
+public void criarSubTurma(Long turmaId) {
+    Turma turma = turmaRepository.findById(turmaId)
+            .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
 
-        turma.getSubTurmas().add(subTurma);
+    SubTurma subTurma = new SubTurma();
+    subTurma.setNome("Turma "+turma.getSubTurmas().size());
+    subTurma.setTurma(turma);
 
-        Semestre semestre = new Semestre();
-        subTurma.setSemestres(new ArrayList<>());
-        subTurma.getSemestres().add(semestre);
+    turma.getSubTurmas().add(subTurma);
 
-        semestre.setNumero(subTurma.getSemestres().size());
-        semestre.setNomeDaTurma(
-                subTurma.getSemestres().size() + " - " +
-                        subTurma.getTurma().getSiglaDaTurma() + " - " +
-                        subTurma.getTurma().getPeriodo().getSigla()
-        );
-        semestre.setSubTurma(subTurma);
+    Semestre semestre = new Semestre();
+    subTurma.setSemestres(new ArrayList<>());
+    subTurma.getSemestres().add(semestre);
 
-        List<AulasDoDiaDTO> aulasDoDiaDTOList = horarioPadraoDTO.listaDeAulasDoDia();
-        HorarioPadrao horarioPadrao = horarioPadraoService.criarHorarioPadraoVazio(semestre, aulasDoDiaDTOList);
-        horarioPadrao.setSemestre(semestre);
-        semestre.setHorarioPadrao(horarioPadrao);
+    semestre.setNumero(subTurma.getSemestres().size());
+    semestre.setNomeDaTurma(
+            subTurma.getSemestres().size() +
+                    subTurma.getTurma().getSiglaDaTurma() +
+                    subTurma.getTurma().getPeriodo().getSigla()
+    );
+    semestre.setSubTurma(subTurma);
 
-        semestre.setHorariosSemanais(new ArrayList<>());
-        List<Aluno> alunos = alunoService.listarAlunosAtivos().stream()
+    // Criar HorarioPadrao vazio
+    HorarioPadrao horarioPadrao = horarioService.criarHorarioPadraoVazio(semestre);
+    semestre.setHorarioPadrao(horarioPadrao);
+
+    semestre.setHorariosSemanais(new ArrayList<>());
+    List<Aluno> alunos = alunoService.listarAlunosAtivos().stream()
                 .map(AlunoDto::fromDTO)
                 .filter(aluno -> alunoService.buscarAlunoPorId(aluno.getId()).isPresent())
                 .collect(Collectors.toList());
         alunos.forEach(aluno -> aluno.setSubTurma(subTurma));
         subTurma.setAlunos(alunos);
+//    subTurma.setAlunos(new ArrayList<>());
 
-        subTurmaRepository.save(subTurma);
-    }
+    subTurmaRepository.save(subTurma);
+}
 
     public List<SubTurmaDTO> listar() {
         return subTurmaRepository.findAll().stream()
@@ -217,18 +255,30 @@ public class SubTurmaService {
     }
 
     public static SubTurma pegarSubTurmaAtual(Aluno aluno) {
-        LocalTime horarioAtual = LocalTime.now();
-//        for (SubTurma subTurma : aluno.getSubTurmas()){
-//            LocalTime horarioEntrada = subTurma.getTurma().getHorarioEntrada();
-//            int minutosPorAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
-//            int minutosPorIntervalo = subTurma.getTurma().getCurso().getTipoDeCurso().getIntevarloMinutos();
-//            int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
-//            LocalTime horarioDeSaida = horarioEntrada.plusMinutes((minutosPorAula*quantidadeDeAulasPorDia)+minutosPorIntervalo);
-//            if (horarioAtual.isAfter(horarioEntrada) && horarioAtual.isBefore(horarioDeSaida)) {
-//                return subTurma;
-//            }
-//        }
-        return aluno.getSubTurma();
+        System.out.println("Pegando sub-turma atual do aluno: " + aluno.getId());
+        LocalTime horarioAtual = LocalTime.of(13, 26, 0);
+        System.out.println("Horário atual: " + horarioAtual);
+//        System.out.println("Sub-turma do aluno: " + aluno.getSubTurma());
+        SubTurma subTurma = aluno.getSubTurma();
+        System.out.println("Sub-turma encontrada: " + (subTurma != null ? subTurma.getNome() : "Nenhuma sub-turma encontrada"));
+        if (subTurma == null) {
+            throw new RuntimeException("O aluno não está matriculado em nenhuma sub-turma.");
+        }
+            LocalTime horarioEntrada = subTurma.getTurma().getHorarioEntrada();
+            System.out.println("Horário de entrada da turma: " + horarioEntrada);
+            int minutosPorAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
+            int minutosPorIntervalo = subTurma.getTurma().getCurso().getTipoDeCurso().getIntevarloMinutos();
+            int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
+            LocalTime horarioDeSaida = horarioEntrada.plusMinutes((minutosPorAula*quantidadeDeAulasPorDia)+minutosPorIntervalo);
+            if (horarioAtual.isAfter(horarioEntrada) && horarioAtual.isBefore(horarioDeSaida)) {
+                return subTurma;
+            }else {
+                System.out.println("Horário atual " + horarioAtual
+                        + " está fora do intervalo de aula: entra às " + horarioEntrada
+                        + ", sai às " + horarioDeSaida);
+                throw new RuntimeException("O aluno não tem nenhuma turma nesse horário");
+            }
+//        throw new RuntimeException("O aluno não têm nehuma turma nesse horario");
 
 //        throw new RuntimeException("O aluno não têm nehuma turma nesse horario");
     }

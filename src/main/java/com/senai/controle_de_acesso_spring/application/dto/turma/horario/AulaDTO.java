@@ -19,9 +19,5 @@ public record AulaDTO(
         );
     }
 
-    public Aula fromDTO() {
-        Aula aula = new Aula();
-        return aula;
-    }
 
 }

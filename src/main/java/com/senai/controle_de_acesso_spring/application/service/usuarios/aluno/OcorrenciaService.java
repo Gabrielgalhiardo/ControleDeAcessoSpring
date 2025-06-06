@@ -16,6 +16,7 @@ import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.SubTurmaRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.OcorrenciaRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
@@ -35,7 +36,7 @@ public class OcorrenciaService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private SubTurmaRepository subTurmaRepository;
+    private AulaService aulaService;
 
     public void cadastrarOcorrencia(OcorrenciaDto ocorrenciaDto){
         ocorrenciaRepository.save(ocorrenciaDto.fromDTO());
@@ -45,27 +46,41 @@ public class OcorrenciaService {
         return ocorrenciaRepository.findAll().stream().map(OcorrenciaDto::toDTO).collect(Collectors.toList());
     }
 
+    @Transactional
     public String criarOcorrenciaDeAtraso(String idAcesso) {
+        System.out.println("Iniciando a criação da ocorrência de atraso para o id de acesso: " + idAcesso);
         Optional<Usuario> usuario = usuarioRepository.findByIdAcesso(idAcesso);
+        System.out.println("Encontrou o usuário");
         if (usuario.isEmpty() || !(usuario.get() instanceof Aluno aluno)) {
             throw new RuntimeException("Usuário não encontrado ou não é um aluno.");
         }
 
+        System.out.println("Vai buscar Subturma");
         SubTurma subTurma = SubTurmaService.pegarSubTurmaAtual(aluno);
+        System.out.println("Encontrou subturma: " + subTurma.getNome());
         LocalTime horarioDeEntrada = subTurma.getTurma().getHorarioEntrada();
+        System.out.println("Pegou o horario de entrada: " + horarioDeEntrada);
         int tolerancia = subTurma.getTurma().getCurso().getToleranciaMinutos();
+        System.out.println("pegou a tolerÂncia: " + tolerancia);
+
+        System.out.println("Não Criou a ocorrência");
+
+        LocalDateTime agora = LocalDateTime.now();
 
         if (LocalTime.now().isBefore(horarioDeEntrada.plusMinutes(tolerancia))) {
             throw new RuntimeException("Ainda está dentro do horário permitido, não há atraso.");
         }
+        System.out.println("Criando ocorrência de atraso para o aluno: " + aluno.getNome());
 
-        Aula aulaAtual = AulaService.pegarAulaAtualPelaSubTurma(subTurma);
+        System.out.println("VAi buscar a aula da aluna(o) "+aluno.getNome());
+        Aula aulaAtual = aulaService.pegarAulaAtualPelaSubTurma(subTurma);
+        System.out.println("Encontrou a aula atual: " + aulaAtual.getUnidadeCurricular().getNome());
 
         Ocorrencia ocorrencia = new Ocorrencia();
         ocorrencia.setTipo(TipoDeOcorrencia.ATRASO);
         ocorrencia.setDescricao("Atraso na entrada");
         ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
-        ocorrencia.setDataHoraCriacao(LocalDateTime.now());
+        ocorrencia.setDataHoraCriacao(agora);
         ocorrencia.setAluno(aluno);
         ocorrencia.setProfessorResponsavel(aulaAtual.getProfessor());
         ocorrencia.setUnidadeCurricular(aulaAtual.getUnidadeCurricular());
@@ -75,6 +90,7 @@ public class OcorrenciaService {
         return "Ocorrência de atraso criada com sucesso!";
     }
 
+    @Transactional
     public String criarOcorrenciaDeSaida(String idAcesso) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByIdAcesso(idAcesso);
         if (usuarioOptional.isPresent()) {
@@ -83,7 +99,7 @@ public class OcorrenciaService {
                 SubTurma subTurma = SubTurmaService.pegarSubTurmaAtual(aluno);
 //                LocalTime horarioDeEntrada = subTurma.getTurma().getHorarioEntrada();
 //                int tolerancia = subTurma.getTurma().getCurso().getToleranciaMinutos();
-                Aula aulaAtual = AulaService.pegarAulaAtualPelaSubTurma(subTurma);
+                Aula aulaAtual = aulaService.pegarAulaAtualPelaSubTurma(subTurma);
 
                 Ocorrencia ocorrencia = new Ocorrencia();
                 ocorrencia.setTipo(TipoDeOcorrencia.SAIDA_ANTECIPADA);

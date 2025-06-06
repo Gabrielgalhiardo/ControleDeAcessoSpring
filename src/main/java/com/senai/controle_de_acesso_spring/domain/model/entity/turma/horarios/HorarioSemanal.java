@@ -14,7 +14,7 @@ public class HorarioSemanal extends HorarioBase {
 
     private LocalDate semanaReferencia;
 
-    @ManyToOne
-    @JoinColumn(name = "semestre_id")
-    private Semestre semestre;
+//    @ManyToOne
+//    @JoinColumn(name = "semestre_id")
+//    private Semestre semestre;
 }

@@ -10,6 +10,6 @@ import lombok.Data;
 @Entity
 @Data
 public class HorarioPadrao extends HorarioBase {
-    @OneToOne(mappedBy = "horarioPadrao", cascade = CascadeType.ALL)
-    private Semestre semestre;
+//    @OneToOne(mappedBy = "horarioPadrao")
+//    private Semestre semestre;
 }

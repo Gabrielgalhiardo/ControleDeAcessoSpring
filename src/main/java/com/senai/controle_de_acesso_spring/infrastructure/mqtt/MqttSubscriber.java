@@ -24,6 +24,7 @@ public class MqttSubscriber {
             client.connect();
             client.subscribe(TOPICO, (topic, msg) -> {
                 String idAcesso = new String(msg.getPayload());
+                System.out.println("Mensagem recebida no tópico " + topic + ": " + idAcesso);
                 controller.criarOcorrenciaDeAtraso(idAcesso);
             });
             System.out.println("Inscrito no tópico MQTT: " + TOPICO);

@@ -1,15 +1,23 @@
 package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulaDTO;
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Ambiente;
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Aula;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioSemanal;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
+import com.senai.controle_de_acesso_spring.domain.model.enums.DiaDaSemana;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeCurso;
+import com.senai.controle_de_acesso_spring.domain.repository.curso.AmbienteRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.curso.UnidadeCurricularRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.turma.horarios.AulaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.ProfessorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
@@ -18,6 +26,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,21 +35,57 @@ public class AulaService {
     @Autowired
     private AulaRepository aulaRepository;
 
+    @Autowired
+    private UnidadeCurricularRepository unidadeCurricularRepository;
+
+    @Autowired
+    private ProfessorRepository professorRepository;
+
+    @Autowired
+    private AmbienteRepository ambienteRepository;
+
     public Aula salvarAula(AulaDTO aulaDTO){
-        return aulaRepository.save(aulaDTO.fromDTO());
+        Ambiente ambiente = ambienteRepository.findById(aulaDTO.ambienteId())
+                .orElseThrow(() -> new RuntimeException("Ambiente não encontrado."));
+        Professor professor = professorRepository.findById(aulaDTO.professorId())
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado."));
+        UnidadeCurricular unidadeCurricular = unidadeCurricularRepository.findById(aulaDTO.unidadeCurricularId())
+                .orElseThrow(() -> new RuntimeException("Unidade Curricular não encontrada."));
+        Aula aula = new Aula();
+        aula.setProfessor(professor);
+        aula.setUnidadeCurricular(unidadeCurricular);
+        aula.setAmbiente(ambiente);
+        aula.setAulasDia(new AulasDoDia());
+        return aulaRepository.save(aula);
+    }
+
+    public List<Aula> salvarAulas(List<AulaDTO> aulasDTO) {
+        List<Aula> aulas = aulasDTO.stream().map(this::salvarAula).toList();
+        return aulaRepository.saveAll(aulas);
     }
 
 
-    public static Aula pegarAulaAtualPelaSubTurma(SubTurma subTurma) {
+    @Transactional
+    public Aula pegarAulaAtualPelaSubTurma(SubTurma subTurma) {
+        System.out.println("Pegando aula atual pela SubTurma: " + subTurma.getNome());
         LocalTime horarioEntrada = subTurma.getTurma().getHorarioEntrada();
+        System.out.println("Horário de entrada: " + horarioEntrada);
         int minutosPorAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
         int minutosDeIntervalo = subTurma.getTurma().getCurso().getTipoDeCurso().getIntevarloMinutos();
 
-        DayOfWeek hoje = DayOfWeek.from(LocalDate.now());
+        System.out.println("Minutos por aula: " + minutosPorAula+ ", Minutos de intervalo: " + minutosDeIntervalo);
+//        DayOfWeek hoje = DayOfWeek.from(LocalDate.now());
 
-        Semestre semestre = subTurma.getSemestres().stream()
-                .max(Comparator.comparing(Semestre::getNumero))
-                .orElseThrow(() -> new RuntimeException("Semestre não encontrado."));
+        System.out.println("Quantidade de semestres: " + subTurma.getSemestres().size());
+
+        System.out.println("vai pegar semestre atual da SubTurma: ");
+        Optional<Semestre> semestreOpt = Optional.of(subTurma.getSemestres().stream()
+                .max(Comparator.comparing(Semestre::getNumero)).get());
+
+        System.out.println("Semestre encontrado: " + semestreOpt.isPresent());
+        Semestre semestre = semestreOpt.orElseThrow(() -> new RuntimeException("Nenhum semestre encontrado."));
+
+        System.out.println("Semestre atual: " + (semestre != null ? semestre.getNumero() : "Nenhum semestre encontrado."));
 
 
 
@@ -58,6 +103,7 @@ public class AulaService {
 //                );
 
         LocalDate semanaAtual = LocalDate.now();
+        System.out.println("Semana atual: " + semanaAtual);
         switch (semanaAtual.getDayOfWeek()){
             case DayOfWeek.TUESDAY -> semanaAtual.plusDays(-1);
 
@@ -68,28 +114,36 @@ public class AulaService {
             case DayOfWeek.FRIDAY -> semanaAtual.plusDays(-4);
 
         }
-        LocalTime agora = LocalTime.now();
+        System.out.println("Semana atual ajustada: " + semanaAtual);
+        LocalTime agora = LocalTime.of(13, 26, 0);
 
+        System.out.println("Horário atual: " + agora);
         Optional<AulasDoDia> aulasDoDiaOpt = Optional.empty();
+
+        System.out.println("Procurando aulas do dia para a semana atual: " + semanaAtual);
 
         Optional<HorarioSemanal> horarioSemanaOpt = semestre.getHorariosSemanais().stream()
                 .filter(horarioSemanal -> horarioSemanal.getSemanaReferencia().equals(semanaAtual))
                 .findFirst();
 
+        System.out.println("Horário semanal encontrado: " + horarioSemanaOpt.isPresent());
+
         Optional<HorarioPadrao> horarioSemanaPadrao = Optional.ofNullable(semestre.getHorarioPadrao());
 
         if (horarioSemanaOpt.isPresent()) {
             aulasDoDiaOpt = Optional.ofNullable(horarioSemanaOpt.get().getListaDeAulasDoDia().stream()
-                    .filter(dia -> dia.getDiaDaSemana().equals(hoje))
+                    .filter(dia -> dia.getDiaDaSemana().equals(DiaDaSemana.obterDiaDaSemanaAtual()))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Sem aulas hoje.")));
 
         } else if (horarioSemanaPadrao.isPresent()) {
             aulasDoDiaOpt = Optional.ofNullable(horarioSemanaPadrao.get().getListaDeAulasDoDia().stream()
-                    .filter(dia -> dia.getDiaDaSemana().equals(hoje))
+                    .filter(dia -> dia.getDiaDaSemana().equals(DiaDaSemana.obterDiaDaSemanaAtual()))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Sem aulas hoje.")));
         }
+
+        System.out.println("Aulas do dia encontradas: " + aulasDoDiaOpt.isPresent());
 
 //        AulasDoDia aulasDoDia = aulasDoDiaOpt.orElseGet(() -> horarioSemana.getListaDeAulasDoDia().stream()
 //                .filter(dia -> dia.getDiaDaSemana().equals(hoje))
@@ -107,15 +161,26 @@ public class AulaService {
                 aulasAteIntervalo = 3;
             }
             LocalTime inicioAula = horarioEntrada.plusMinutes((ordem - 1) * minutosPorAula + Math.max(0, ordem - 1) * minutosDeIntervalo);
-
+            System.out.println("inicioAula: " + inicioAula);
             if (horarioEntrada.plusMinutes(minutosPorAula*aulasAteIntervalo).isAfter(inicioAula)){
                 inicioAula.plusMinutes(minutosDeIntervalo);
             }
+            System.out.println("inicioAula ajustado: " + inicioAula);
+            System.out.println("Ordem da aula: " + ordem +
+                    ", Início: " + inicioAula +
+                    ", Horário de entrada: " + horarioEntrada);
             LocalTime fimAula = inicioAula.plusMinutes(minutosPorAula);
-
+            System.out.println("Fim da aula: " + fimAula);
             if (agora.isAfter(inicioAula) && agora.isBefore(fimAula)) {
                 return aula;
+            }else if (agora.equals(fimAula) || agora.isAfter(fimAula)) {
+                System.out.println("Aula de "+aula.getUnidadeCurricular().getNome()+" finalizada.");
+                return aula;
             }
+            System.out.println("Aula: " + aula.getUnidadeCurricular().getNome() +
+                    ", Início: " + inicioAula +
+                    ", Fim: " + fimAula +
+                    ", Ordem: " + ordem);
         }
 
         throw new RuntimeException("Nenhuma aula acontecendo neste momento.");

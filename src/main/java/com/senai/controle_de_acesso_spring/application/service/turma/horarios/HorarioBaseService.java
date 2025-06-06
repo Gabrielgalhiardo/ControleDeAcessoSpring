@@ -3,6 +3,7 @@ package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioBaseDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioSemanalDTO;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioBase;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioSemanal;
@@ -24,24 +25,14 @@ public class HorarioBaseService {
 //        horarioBaseRepository.save(horarioBase);
 //    }
 
-    public void preencherHorario(HorarioBase horarioBase, List<AulasDoDiaDTO> aulasDoDia) {
-        System.out.println("Horario base: "+horarioBase.getSemestre().toString());
-        if(horarioBase instanceof HorarioPadrao horarioPadrao){
-            horarioPadrao.setSemestre(horarioBase.getSemestre());
-            horarioPadrao.setListaDeAulasDoDia(aulasDoDia.stream()
-                    .map(AulasDoDiaDTO::fromDTO)
-                    .toList());
-        } else if (horarioBase instanceof  HorarioSemanal horarioSemanal) {
-            horarioSemanal.setSemestre(horarioBase.getSemestre());
-            horarioSemanal.setSemanaReferencia(((HorarioSemanal) horarioBase).getSemanaReferencia());
-            horarioSemanal.setListaDeAulasDoDia(aulasDoDia.stream()
-                    .map(AulasDoDiaDTO::fromDTO)
-                    .toList());
-        }
+    public void preencherHorario(HorarioBase horarioBase, List<AulasDoDia> aulasDoDia) {
+        horarioBase.setSemestre(horarioBase.getSemestre());
+        horarioBase.setListaDeAulasDoDia(aulasDoDia);
+        horarioBaseRepository.save(horarioBase);
+
 //        horarioBase.setListaDeAulasDoDia(
 //                aulasDoDia.stream().map(AulasDoDiaDTO::fromDTO).toList()
 //        );
-        horarioBaseRepository.save(horarioBase);
 
     }
 }

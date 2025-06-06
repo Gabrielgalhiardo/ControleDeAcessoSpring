@@ -42,7 +42,7 @@ public class HorarioSemanalService {
                 .flatMap(h -> h.getListaDeAulasDoDia().stream())
                 .map(AulasDoDiaDTO::toDTO)
                 .toList();
-        listaHorariosSemanais.forEach(h -> horarioBaseService.preencherHorario(h, listaAulasDoDia));
+//        listaHorariosSemanais.forEach(h -> horarioBaseService.preencherHorario(h, listaAulasDoDia));
 
         horarioSemanalRepository.saveAll(listaHorariosSemanais);
         return listaHorariosSemanais.stream()
