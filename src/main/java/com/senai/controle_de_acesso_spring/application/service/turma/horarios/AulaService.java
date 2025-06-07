@@ -115,7 +115,7 @@ public class AulaService {
 
         }
         System.out.println("Semana atual ajustada: " + semanaAtual);
-        LocalTime agora = LocalTime.of(13, 26, 0);
+        LocalTime agora = LocalTime.now();
 
         System.out.println("Horário atual: " + agora);
         Optional<AulasDoDia> aulasDoDiaOpt = Optional.empty();
@@ -150,31 +150,37 @@ public class AulaService {
 //                .findFirst()
 //                .orElseThrow(() -> new RuntimeException("Sem aulas hoje.")));
 
-
+            TipoDeCurso tipoDeCurso = subTurma.getTurma().getCurso().getTipoDeCurso();
         for (Aula aula : aulasDoDiaOpt.get().getAulas()) {
             int ordem = aula.getOrdem();
             int aulasAteIntervalo;
 
-            if (subTurma.getTurma().getCurso().getTipoDeCurso().equals(TipoDeCurso.CAI)){
+            if (tipoDeCurso.equals(TipoDeCurso.CAI)){
                 aulasAteIntervalo = 2;
             }else{
                 aulasAteIntervalo = 3;
             }
-            LocalTime inicioAula = horarioEntrada.plusMinutes((ordem - 1) * minutosPorAula + Math.max(0, ordem - 1) * minutosDeIntervalo);
-            System.out.println("inicioAula: " + inicioAula);
-            if (horarioEntrada.plusMinutes(minutosPorAula*aulasAteIntervalo).isAfter(inicioAula)){
-                inicioAula.plusMinutes(minutosDeIntervalo);
+            LocalTime inicioAula = horarioEntrada.plusMinutes(minutosPorAula * ordem);
+            LocalTime fimAula = inicioAula.plusMinutes(minutosPorAula);
+
+            if (ordem>=aulasAteIntervalo){
+                System.out.println("Ordem da aula: " + ordem + ", Ajustando início da aula para intervalo.");
+                System.out.println("Minutos adicionados pro intervalo "+tipoDeCurso.getIntevarloMinutos());
+                inicioAula = inicioAula.plusMinutes(-tipoDeCurso.getIntevarloMinutos());
+                fimAula = fimAula.plusMinutes(tipoDeCurso.getIntevarloMinutos());
             }
+
+            System.out.println("inicioAula: " + inicioAula+" de"+aula.getUnidadeCurricular().getNome());
+//            if (horarioEntrada.plusMinutes(minutosPorAula*aulasAteIntervalo).isAfter(inicioAula)){
+//                inicioAula.plusMinutes(minutosDeIntervalo);
+//            }
             System.out.println("inicioAula ajustado: " + inicioAula);
             System.out.println("Ordem da aula: " + ordem +
                     ", Início: " + inicioAula +
                     ", Horário de entrada: " + horarioEntrada);
-            LocalTime fimAula = inicioAula.plusMinutes(minutosPorAula);
             System.out.println("Fim da aula: " + fimAula);
             if (agora.isAfter(inicioAula) && agora.isBefore(fimAula)) {
-                return aula;
-            }else if (agora.equals(fimAula) || agora.isAfter(fimAula)) {
-                System.out.println("Aula de "+aula.getUnidadeCurricular().getNome()+" finalizada.");
+                System.out.println("retornando aula atual: " + aula.getUnidadeCurricular().getNome());
                 return aula;
             }
             System.out.println("Aula: " + aula.getUnidadeCurricular().getNome() +

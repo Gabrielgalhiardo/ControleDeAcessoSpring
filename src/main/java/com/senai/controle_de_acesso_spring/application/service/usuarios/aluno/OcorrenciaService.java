@@ -37,6 +37,8 @@ public class OcorrenciaService {
 
     @Autowired
     private AulaService aulaService;
+    @Autowired
+    private SubTurmaService subTurmaService;
 
     public void cadastrarOcorrencia(OcorrenciaDto ocorrenciaDto){
         ocorrenciaRepository.save(ocorrenciaDto.fromDTO());
@@ -56,7 +58,7 @@ public class OcorrenciaService {
         }
 
         System.out.println("Vai buscar Subturma");
-        SubTurma subTurma = SubTurmaService.pegarSubTurmaAtual(aluno);
+        SubTurma subTurma = subTurmaService.pegarSubTurmaAtual(aluno);
         System.out.println("Encontrou subturma: " + subTurma.getNome());
         LocalTime horarioDeEntrada = subTurma.getTurma().getHorarioEntrada();
         System.out.println("Pegou o horario de entrada: " + horarioDeEntrada);
@@ -96,7 +98,7 @@ public class OcorrenciaService {
         if (usuarioOptional.isPresent()) {
             if (usuarioOptional.get() instanceof Aluno aluno){
 
-                SubTurma subTurma = SubTurmaService.pegarSubTurmaAtual(aluno);
+                SubTurma subTurma = subTurmaService.pegarSubTurmaAtual(aluno);
 //                LocalTime horarioDeEntrada = subTurma.getTurma().getHorarioEntrada();
 //                int tolerancia = subTurma.getTurma().getCurso().getToleranciaMinutos();
                 Aula aulaAtual = aulaService.pegarAulaAtualPelaSubTurma(subTurma);

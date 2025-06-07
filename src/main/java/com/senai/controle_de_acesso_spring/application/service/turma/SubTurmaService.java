@@ -254,9 +254,10 @@ public void criarSubTurma(Long turmaId) {
         return true;
     }
 
-    public static SubTurma pegarSubTurmaAtual(Aluno aluno) {
+    @Transactional
+    public SubTurma pegarSubTurmaAtual(Aluno aluno) {
         System.out.println("Pegando sub-turma atual do aluno: " + aluno.getId());
-        LocalTime horarioAtual = LocalTime.of(13, 26, 0);
+        LocalTime horarioAtual = LocalTime.now();
         System.out.println("Horário atual: " + horarioAtual);
 //        System.out.println("Sub-turma do aluno: " + aluno.getSubTurma());
         SubTurma subTurma = aluno.getSubTurma();
