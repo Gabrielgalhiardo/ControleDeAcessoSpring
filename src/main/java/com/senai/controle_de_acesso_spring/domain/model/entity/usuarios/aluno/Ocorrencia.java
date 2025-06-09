@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
@@ -28,6 +29,7 @@ public class Ocorrencia {
     private LocalDateTime dataHoraConclusao;
 
     @ManyToOne
+    @JsonBackReference
     private Aluno aluno;
 
     @ManyToOne

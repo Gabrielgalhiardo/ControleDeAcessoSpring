@@ -1,26 +1,27 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
-import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDto;
-import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
+import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDTO;
 import com.senai.controle_de_acesso_spring.application.service.turma.SubTurmaService;
 import com.senai.controle_de_acesso_spring.application.service.turma.horarios.AulaService;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Aula;
-import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
-import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.AQV;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Ocorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
-import com.senai.controle_de_acesso_spring.domain.repository.turma.SubTurmaRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.AQVRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.ProfessorRepository;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.AlunoRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.OcorrenciaRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class OcorrenciaService {
 
+    //Nosso jeito
     @Autowired
     private OcorrenciaRepository ocorrenciaRepository;
 
@@ -37,16 +39,96 @@ public class OcorrenciaService {
 
     @Autowired
     private AulaService aulaService;
+
     @Autowired
     private SubTurmaService subTurmaService;
 
-    public void cadastrarOcorrencia(OcorrenciaDto ocorrenciaDto){
+    //Exemplo do professor
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private AlunoRepository alunoRepository;
+    @Autowired
+    private ProfessorRepository professorRepository;
+    @Autowired
+    private AQVRepository aqvRepository;
+
+    @Transactional
+    public void solicitarSaidaAntecipada(com.senai.controle_de_acesso_spring.application.dto.auth.OcorrenciaDTO dto) {
+        Aluno aluno = alunoRepository.findById(dto.alunoId())
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+
+        AQV aqv = aqvRepository.findFirstByOrderByIdAsc()
+                .orElseThrow(() -> new RuntimeException("AQV não encontrada"));
+
+        Professor professor = professorRepository.findById(dto.professorResponsavelId())
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        Ocorrencia ocorrencia = dto.fromDTO();
+        ocorrencia.setProfessorResponsavel(professor);
+        ocorrencia.setDataHoraCriacao(LocalDateTime.now());
+        ocorrencia.setAluno(aluno);
+        ocorrencia.setTipo(TipoDeOcorrencia.SAIDA_ANTECIPADA);
+        this.mudarStatusEEnviaOcorrencia(
+                StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO,
+                aqv,
+                ocorrencia
+        );
+    }
+
+    public void decidirSaida(com.senai.controle_de_acesso_spring.application.dto.auth.OcorrenciaDTO dto) {
+
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(dto.id())
+                .orElseThrow(() -> new RuntimeException("Ocorrência não encontrada"));
+
+        if (dto.status() == StatusDaOcorrencia.REPROVADO) {
+            mudarStatusEEnviaOcorrencia(
+                    StatusDaOcorrencia.REPROVADO,
+                    ocorrencia.getAluno(),
+                    ocorrencia
+            );
+        }else {
+            mudarStatusEEnviaOcorrencia(
+                    StatusDaOcorrencia.AGUARDANDO_CIENCIA_PROFESSOR,
+                    ocorrencia.getProfessorResponsavel(),
+                    ocorrencia
+            );
+        }
+    }
+
+    public void confirmarCiencia(com.senai.controle_de_acesso_spring.application.dto.auth.OcorrenciaDTO dto) {
+
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(dto.id())
+                .orElseThrow(() -> new RuntimeException("Ocorrência não encontrada"));
+
+        mudarStatusEEnviaOcorrencia(
+                StatusDaOcorrencia.APROVADO,
+                ocorrencia.getAluno(),
+                ocorrencia
+        );
+    }
+
+    public void mudarStatusEEnviaOcorrencia(StatusDaOcorrencia status, Usuario usuarioDestino, Ocorrencia ocorrencia){
+        ocorrencia.setStatusDaOcorrencia(status);
+        ocorrenciaRepository.save(ocorrencia);
+        System.out.println("Vai tentar pegar usuário");
+        System.out.println("Enviado para "+ usuarioDestino.getEmail() + " a ocorrencia de id: " + ocorrencia.getId());
+        messagingTemplate.convertAndSendToUser(
+                usuarioDestino.getEmail(),
+                "/queue/ocorrencia",
+                com.senai.controle_de_acesso_spring.application.dto.auth.OcorrenciaDTO.toDTO(ocorrencia)
+        );
+    }
+
+    public void cadastrarOcorrencia(OcorrenciaDTO ocorrenciaDto){
         ocorrenciaRepository.save(ocorrenciaDto.fromDTO());
     }
 
-    public List<OcorrenciaDto> listarOcorrencias(){
-        return ocorrenciaRepository.findAll().stream().map(OcorrenciaDto::toDTO).collect(Collectors.toList());
+    public List<OcorrenciaDTO> listarOcorrencias(){
+        return ocorrenciaRepository.findAll().stream().map(OcorrenciaDTO::toDTO).collect(Collectors.toList());
     }
+
+
 
     @Transactional
     public String criarOcorrenciaDeAtraso(String idAcesso) {
@@ -124,11 +206,11 @@ public class OcorrenciaService {
         }
     }
 
-    public Optional<OcorrenciaDto> buscarOcorrenciaPorId(Long id){
-        return ocorrenciaRepository.findById(id).map(OcorrenciaDto::toDTO);
+    public Optional<OcorrenciaDTO> buscarOcorrenciaPorId(Long id){
+        return ocorrenciaRepository.findById(id).map(OcorrenciaDTO::toDTO);
     }
 
-    public boolean atualizarOcorrencia (Long id, OcorrenciaDto ocorrenciaDto){
+    public boolean atualizarOcorrencia (Long id, OcorrenciaDTO ocorrenciaDto){
         return ocorrenciaRepository.findById(id).map(ocorrenciaAntiga ->{
             Ocorrencia ocorrenciaAtualizada = ocorrenciaDto.fromDTO();
             ocorrenciaAntiga.setTipo(ocorrenciaAtualizada.getTipo());

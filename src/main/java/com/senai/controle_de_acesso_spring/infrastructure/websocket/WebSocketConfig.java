@@ -37,6 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     @Override
                     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
                         String username = (String) attributes.get("username");
+                        System.out.println("Username from WebSocket handshake: " + username);
                         return new UsernamePrincipal(username);
                     }
                 })

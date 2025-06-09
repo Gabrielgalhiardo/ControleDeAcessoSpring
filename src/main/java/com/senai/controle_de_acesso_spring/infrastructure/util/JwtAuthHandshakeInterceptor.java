@@ -2,6 +2,7 @@ package com.senai.controle_de_acesso_spring.infrastructure.util;
 
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
@@ -22,6 +23,10 @@ public class JwtAuthHandshakeInterceptor implements HandshakeInterceptor {
                                    Map<String, Object> attributes) {
         String uri = request.getURI().toString();
         String token = null;
+
+        if (request instanceof ServletServerHttpRequest servletRequest) {
+            token = servletRequest.getServletRequest().getHeader("Authorization");
+        }
 
         if (uri.contains("token=")) {
             token = uri.substring(uri.indexOf("token=") + 6);

@@ -1,4 +1,5 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.usuarios;
+import com.senai.controle_de_acesso_spring.domain.model.enums.PermissoesDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,6 @@ public abstract class Usuario {
     protected String senha;
     @Enumerated(EnumType.STRING)
     protected StatusDoUsuario statusDoUsuario;
-
     @ElementCollection(fetch = FetchType.EAGER)
-    protected List<String> permissoes;
+    protected List<PermissoesDoUsuario> permissoes;
 }

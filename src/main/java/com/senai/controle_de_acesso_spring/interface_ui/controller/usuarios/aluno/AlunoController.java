@@ -2,6 +2,9 @@ package com.senai.controle_de_acesso_spring.interface_ui.controller.usuarios.alu
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.AlunoDto;
 import com.senai.controle_de_acesso_spring.application.service.usuarios.aluno.AlunoService;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Usuario;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.aluno.Aluno;
+import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +14,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/alunos")
-
 public class AlunoController {
 
     @Autowired
     private AlunoService alunoService;
+
+    @Autowired
+    private AlunoRepository alunoRepository;
 
     @PostMapping
     public ResponseEntity<Void> cadastrarAluno(@RequestBody AlunoDto alunoDto){
@@ -41,6 +46,13 @@ public class AlunoController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/{id}/nome")
+    public String buscarNomeAlunoPorId(@PathVariable Long id) {
+        System.out.println("Pegou ocorrencia via websocket");
+        Optional<Aluno> alunoOpt = alunoRepository.findById(id);
+        return alunoOpt.map(Usuario::getNome).orElse(null);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> inativarAluno(@PathVariable Long id){
         if (alunoService.inativarAluno(id)){
@@ -49,21 +61,4 @@ public class AlunoController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{id}/validarIdade")
-    public ResponseEntity<String> validarIdadeAluno(@PathVariable Long id, @RequestBody AlunoDto alunoDto){
-        Optional<AlunoDto> alunoOpt = alunoService.buscarAlunoPorId(id);
-
-        if (alunoOpt.isPresent()) {
-            AlunoDto aluno = alunoOpt.get();
-
-            if (alunoService.validarIdadeAluno(id, aluno)){
-                System.out.println("LOG: Aluno é MAIOR de idade");
-                return ResponseEntity.ok("Aluno é MAIOR de idade");
-            } else {
-                System.out.println();
-                return ResponseEntity.ok("Aluno é MENOR de idade");
-            }
-        }
-        return ResponseEntity.notFound().build();
-    }
 }
