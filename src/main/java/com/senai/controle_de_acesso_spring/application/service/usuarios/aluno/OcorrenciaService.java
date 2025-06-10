@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDTO;
+import com.senai.controle_de_acesso_spring.application.service.turma.SemestreService;
 import com.senai.controle_de_acesso_spring.application.service.turma.SubTurmaService;
 import com.senai.controle_de_acesso_spring.application.service.turma.horarios.AulaService;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
@@ -22,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -64,10 +66,37 @@ public class OcorrenciaService {
         Professor professor = professorRepository.findById(dto.professorResponsavelId())
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
 
+        System.out.println("Vai buscar Subturma");
+        SubTurma subTurma = subTurmaService.pegarSubTurmaAtual(aluno);
+        //pegar semestre com base no dia que se inicio e no dia atual
+
+        System.out.println("Encontrou subturma: " + subTurma.getNome());
+        LocalTime horarioDeEntrada = subTurma.getTurma().getHorarioEntrada();
+        int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
+        int minutosDeAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
+        System.out.println("Pegou o horario de entrada: " + horarioDeEntrada);
+        LocalTime horarioDeSaida = horarioDeEntrada.plusMinutes(quantidadeDeAulasPorDia * minutosDeAula);
+
+        if (LocalTime.now().isAfter(horarioDeSaida)) {
+            throw new RuntimeException("Não pode criar ocorrência depois do horário de saída.");
+        }
+
+        if (LocalTime.now().isBefore(horarioDeEntrada)) {
+            throw new RuntimeException("Ainda está dentro do horário permitido, não há atraso.");
+        }
+        System.out.println("Criando ocorrência de atraso para o aluno: " + aluno.getNome());
+
+        System.out.println("VAi buscar a aula da aluna(o) "+aluno.getNome());
+        Aula aulaAtual = aulaService.pegarAulaAtualPelaSubTurma(subTurma);
+        System.out.println("Encontrou a aula atual: " + aulaAtual.getUnidadeCurricular().getNome());
+
         Ocorrencia ocorrencia = dto.fromDTO();
         ocorrencia.setProfessorResponsavel(professor);
         ocorrencia.setDataHoraCriacao(LocalDateTime.now());
         ocorrencia.setAluno(aluno);
+        ocorrencia.setProfessorResponsavel(aulaAtual.getProfessor());
+        ocorrencia.setUnidadeCurricular(aulaAtual.getUnidadeCurricular());
+        ocorrencia.setDataHoraCriacao(LocalDateTime.now());
         ocorrencia.setTipo(TipoDeOcorrencia.SAIDA_ANTECIPADA);
         this.mudarStatusEEnviaOcorrencia(
                 StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO,
