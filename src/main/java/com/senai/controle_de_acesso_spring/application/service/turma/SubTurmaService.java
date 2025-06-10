@@ -277,7 +277,7 @@ public void criarSubTurma(Long turmaId) {
                 System.out.println("Horário atual " + horarioAtual
                         + " está fora do intervalo de aula: entra às " + horarioEntrada
                         + ", sai às " + horarioDeSaida);
-                throw new RuntimeException("O aluno não tem nenhuma turma nesse horário");
+                throw new RuntimeException("O aluno não tem nenhuma subturma nesse horário");
             }
 //        throw new RuntimeException("O aluno não têm nehuma turma nesse horario");
 
