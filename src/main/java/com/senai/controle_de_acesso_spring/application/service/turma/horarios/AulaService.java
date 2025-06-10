@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulaDTO;
+import com.senai.controle_de_acesso_spring.application.service.turma.SemestreService;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Ambiente;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
@@ -80,7 +81,8 @@ public class AulaService {
 
         System.out.println("vai pegar semestre atual da SubTurma: ");
         Optional<Semestre> semestreOpt = Optional.of(subTurma.getSemestres().stream()
-                .max(Comparator.comparing(Semestre::getNumero)).get());
+                .filter(s -> s.getNumero() == SemestreService.pegarSemestreAtual(subTurma.getTurma()))
+                .findFirst()).get();
 
         System.out.println("Semestre encontrado: " + semestreOpt.isPresent());
         Semestre semestre = semestreOpt.orElseThrow(() -> new RuntimeException("Nenhum semestre encontrado."));

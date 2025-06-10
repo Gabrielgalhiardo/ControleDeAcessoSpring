@@ -2,7 +2,6 @@ package com.senai.controle_de_acesso_spring.interface_ui.controller.usuarios.alu
 
 import com.senai.controle_de_acesso_spring.application.dto.auth.OcorrenciaDTO;
 import com.senai.controle_de_acesso_spring.application.service.usuarios.aluno.OcorrenciaService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
