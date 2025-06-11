@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.infrastructure.util;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -21,23 +22,43 @@ public class JwtAuthHandshakeInterceptor implements HandshakeInterceptor {
                                    ServerHttpResponse response,
                                    WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) {
-        String uri = request.getURI().toString();
         String token = null;
 
         if (request instanceof ServletServerHttpRequest servletRequest) {
-            token = servletRequest.getServletRequest().getHeader("Authorization");
+            String authorizationHeader = servletRequest.getServletRequest().getHeader(HttpHeaders.AUTHORIZATION);
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                token = authorizationHeader.substring(7);
+                System.out.println("WebSocket handshake: Token found in header: " + token);
+            }
         }
 
-        if (uri.contains("token=")) {
+
+        if (token == null && request.getURI().toString().contains("token=")) {
+            String uri = request.getURI().toString();
             token = uri.substring(uri.indexOf("token=") + 6);
+            int endOfToken = token.indexOf("&");
+            if (endOfToken != -1) {
+                token = token.substring(0, endOfToken);
+            }
         }
 
-        if (token != null && jwtUtil.validateToken(token)) {
-            String username = jwtUtil.extractUsername(token);
-            attributes.put("username", username);
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+                String username = jwtUtil.extractUsername(token);
+                attributes.put("username", username);
+                System.out.println("WebSocket handshake: Token VALID. Username: " + username);
+                return true;
+            } else {
+                System.out.println("WebSocket handshake: Token INVALID or EXPIRED.");
+                response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+                return false;
+            }
+        } else {
+            System.out.println("WebSocket handshake: No token found.");
+            response.setStatusCode(org.springframework.http.HttpStatus.UNAUTHORIZED);
+            return false;
         }
 
-        return true;
     }
 
     @Override
@@ -45,5 +66,9 @@ public class JwtAuthHandshakeInterceptor implements HandshakeInterceptor {
                                ServerHttpResponse response,
                                WebSocketHandler wsHandler,
                                Exception exception) {
+        if (exception != null) {
+            System.err.println("WebSocket handshake error: " + exception.getMessage());
+            exception.printStackTrace();
+        }
     }
 }
