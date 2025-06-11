@@ -29,6 +29,7 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AulaService {
@@ -192,6 +193,36 @@ public class AulaService {
         }
 
         throw new RuntimeException("Nenhuma aula acontecendo neste momento.");
+    }
+
+    public List<AulaDTO> listarAulas(){
+        return aulaRepository.findAll()
+                .stream().map(AulaDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Optional<AulaDTO> buscarId(Long id){
+        return aulaRepository.findById(id)
+                .map(AulaDTO::toDTO);
+    }
+
+    public boolean atualizarAulas(Long id, Aula aulaAntiga){
+        return aulaRepository.findById(id).map(aula -> {
+            Aula aulaAtualizado = aulaAntiga;
+            aula.setOrdem(aulaAtualizado.getOrdem());
+            aula.setUnidadeCurricular(aulaAtualizado.getUnidadeCurricular());
+            aula.setProfessor(aulaAtualizado.getProfessor());
+            aula.setAmbiente(aulaAtualizado.getAmbiente());
+//            Ambiente ambiente = ambienteRepository.findById(aulaDTO.ambienteId());
+            return true;
+        }).orElse(false);
+    }
+
+    public boolean deletar(Long id){
+        return aulaRepository.findById(id).map(aula -> {
+            aulaRepository.delete(aula);
+            return true;
+        }).orElse(false);
     }
 
 }

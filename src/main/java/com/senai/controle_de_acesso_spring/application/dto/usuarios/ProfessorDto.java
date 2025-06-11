@@ -10,10 +10,12 @@ public record ProfessorDto(
         String nome,
         String cpf,
         LocalDate dataNascimento,
-        String email
+        String email,
+        String idAcesso,
+        String senha
 ) {
     public static ProfessorDto toDTO(Professor p){
-        return new ProfessorDto(p.getId(), p.getNome(), p.getCpf(), p.getDataNascimento(), p.getEmail());
+        return new ProfessorDto(p.getId(), p.getNome(), p.getCpf(), p.getDataNascimento(), p.getEmail(),p.getIdAcesso(),p.getSenha());
     }
 
     public Professor fromDTO(){
@@ -24,6 +26,8 @@ public record ProfessorDto(
         professor.setEmail(email);
         professor.setDataNascimento(dataNascimento);
         professor.setStatusDoUsuario(StatusDoUsuario.ATIVO);
+        professor.setIdAcesso(idAcesso);
+        professor.setSenha(senha);
         return professor;
     }
 }
