@@ -54,6 +54,7 @@ public class AulaService {
         UnidadeCurricular unidadeCurricular = unidadeCurricularRepository.findById(aulaDTO.unidadeCurricularId())
                 .orElseThrow(() -> new RuntimeException("Unidade Curricular não encontrada."));
         Aula aula = new Aula();
+        aula.setOrdem(aulaDTO.ordem());
         aula.setProfessor(professor);
         aula.setUnidadeCurricular(unidadeCurricular);
         aula.setAmbiente(ambiente);
@@ -206,14 +207,20 @@ public class AulaService {
                 .map(AulaDTO::toDTO);
     }
 
-    public boolean atualizarAulas(Long id, Aula aulaAntiga){
+    public boolean atualizarAulas(Long id, AulaDTO novaAulaDTO) {
         return aulaRepository.findById(id).map(aula -> {
-            Aula aulaAtualizado = aulaAntiga;
-            aula.setOrdem(aulaAtualizado.getOrdem());
-            aula.setUnidadeCurricular(aulaAtualizado.getUnidadeCurricular());
-            aula.setProfessor(aulaAtualizado.getProfessor());
-            aula.setAmbiente(aulaAtualizado.getAmbiente());
-//            Ambiente ambiente = ambienteRepository.findById(aulaDTO.ambienteId());
+            aula.setOrdem(novaAulaDTO.ordem());
+            UnidadeCurricular uc = unidadeCurricularRepository.findById(novaAulaDTO.unidadeCurricularId())
+                    .orElseThrow(() -> new RuntimeException("Unidade Curricular não encontrada."));
+            Professor professor = professorRepository.findById(novaAulaDTO.professorId())
+                    .orElseThrow(() -> new RuntimeException("Professor não encontrado."));
+            Ambiente ambiente = ambienteRepository.findById(novaAulaDTO.ambienteId())
+                    .orElseThrow(() -> new RuntimeException("Ambiente não encontrado."));
+            aula.setUnidadeCurricular(uc);
+            aula.setProfessor(professor);
+            aula.setAmbiente(ambiente);
+
+            aulaRepository.save(aula);
             return true;
         }).orElse(false);
     }

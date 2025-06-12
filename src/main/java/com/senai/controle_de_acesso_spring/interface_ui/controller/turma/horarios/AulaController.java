@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("aula")
+@RequestMapping("/aula")
 public class AulaController {
     @Autowired
     AulaService aulaService;
@@ -20,9 +20,9 @@ public class AulaController {
     private AulaRepository aulaRepository;
 
     @PostMapping
-    public ResponseEntity<Aula> criarAula(@RequestBody Aula aula){
-        aulaRepository.save(aula);
-        return ResponseEntity.status(201).body(aula);
+    public ResponseEntity<AulaDTO> criarAula(@RequestBody AulaDTO aulaDTO){
+        Aula aulaSalva = aulaService.salvarAula(aulaDTO);
+        return ResponseEntity.status(201).body(AulaDTO.toDTO(aulaSalva));
     }
 
     @GetMapping("/{id}")
@@ -37,8 +37,8 @@ public class AulaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizarAula(@PathVariable Long id, @RequestBody Aula aula){
-        if (aulaService.atualizarAulas(id, aula)){
+    public ResponseEntity<Void> atualizarAula(@PathVariable Long id, @RequestBody AulaDTO aulaDTO){
+        if (aulaService.atualizarAulas(id, aulaDTO)){
            return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
