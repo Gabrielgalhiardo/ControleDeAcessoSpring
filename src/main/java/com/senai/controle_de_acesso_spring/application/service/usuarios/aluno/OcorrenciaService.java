@@ -67,35 +67,34 @@ public class OcorrenciaService {
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
 
         System.out.println("Vai buscar Subturma");
-        SubTurma subTurma = subTurmaService.pegarSubTurmaAtual(aluno);
-        //pegar semestre com base no dia que se inicio e no dia atual
-
-        System.out.println("Encontrou subturma: " + subTurma.getNome());
-        LocalTime horarioDeEntrada = subTurma.getTurma().getHorarioEntrada();
-        int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
-        int minutosDeAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
-        System.out.println("Pegou o horario de entrada: " + horarioDeEntrada);
-        LocalTime horarioDeSaida = horarioDeEntrada.plusMinutes(quantidadeDeAulasPorDia * minutosDeAula);
-
-        if (LocalTime.now().isAfter(horarioDeSaida)) {
-            throw new RuntimeException("Não pode criar ocorrência depois do horário de saída.");
-        }
-
-        if (LocalTime.now().isBefore(horarioDeEntrada)) {
-            throw new RuntimeException("Ainda está dentro do horário permitido, não há atraso.");
-        }
-        System.out.println("Criando ocorrência de atraso para o aluno: " + aluno.getNome());
-
-        System.out.println("VAi buscar a aula da aluna(o) "+aluno.getNome());
-        Aula aulaAtual = aulaService.pegarAulaAtualPelaSubTurma(subTurma);
-        System.out.println("Encontrou a aula atual: " + aulaAtual.getUnidadeCurricular().getNome());
+//        SubTurma subTurma = subTurmaService.pegarSubTurmaAtual(aluno);
+//        //pegar semestre com base no dia que se inicio e no dia atual
+//
+//        System.out.println("Encontrou subturma: " + subTurma.getNome());
+//        LocalTime horarioDeEntrada = subTurma.getTurma().getHorarioEntrada();
+//        int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
+//        int minutosDeAula = subTurma.getTurma().getCurso().getTipoDeCurso().getMinutosPorAula();
+//        System.out.println("Pegou o horario de entrada: " + horarioDeEntrada);
+//        LocalTime horarioDeSaida = horarioDeEntrada.plusMinutes(quantidadeDeAulasPorDia * minutosDeAula);
+//
+//        if (LocalTime.now().isAfter(horarioDeSaida)) {
+//            throw new RuntimeException("Não pode criar ocorrência depois do horário de saída.");
+//        }
+//
+//        if (LocalTime.now().isBefore(horarioDeEntrada)) {
+//            throw new RuntimeException("Ainda está dentro do horário permitido, não há atraso.");
+//        }
+//        System.out.println("Criando ocorrência de atraso para o aluno: " + aluno.getNome());
+//
+//        System.out.println("VAi buscar a aula da aluna(o) "+aluno.getNome());
+//        Aula aulaAtual = aulaService.pegarAulaAtualPelaSubTurma(subTurma);
+//        System.out.println("Encontrou a aula atual: " + aulaAtual.getUnidadeCurricular().getNome());
 
         Ocorrencia ocorrencia = dto.fromDTO();
         ocorrencia.setProfessorResponsavel(professor);
         ocorrencia.setDataHoraCriacao(LocalDateTime.now());
         ocorrencia.setAluno(aluno);
-        ocorrencia.setProfessorResponsavel(aulaAtual.getProfessor());
-        ocorrencia.setUnidadeCurricular(aulaAtual.getUnidadeCurricular());
+//        ocorrencia.setUnidadeCurricular();
         ocorrencia.setDataHoraCriacao(LocalDateTime.now());
         ocorrencia.setTipo(TipoDeOcorrencia.SAIDA_ANTECIPADA);
         this.mudarStatusEEnviaOcorrencia(
@@ -163,6 +162,7 @@ public class OcorrenciaService {
     public String criarOcorrenciaDeAtraso(String idAcesso) {
         System.out.println("Iniciando a criação da ocorrência de atraso para o id de acesso: " + idAcesso);
         Optional<Usuario> usuario = usuarioRepository.findByIdAcesso(idAcesso);
+        Optional<AQV> aqvOptional = aqvRepository.findFirstByOrderByIdAsc();
         System.out.println("Encontrou o usuário");
         if (usuario.isEmpty() || !(usuario.get() instanceof Aluno aluno)) {
             throw new RuntimeException("Usuário não encontrado ou não é um aluno.");
@@ -175,8 +175,6 @@ public class OcorrenciaService {
         System.out.println("Pegou o horario de entrada: " + horarioDeEntrada);
         int tolerancia = subTurma.getTurma().getCurso().getToleranciaMinutos();
         System.out.println("pegou a tolerÂncia: " + tolerancia);
-
-        System.out.println("Não Criou a ocorrência");
 
         LocalDateTime agora = LocalDateTime.now();
 
@@ -198,7 +196,14 @@ public class OcorrenciaService {
         ocorrencia.setProfessorResponsavel(aulaAtual.getProfessor());
         ocorrencia.setUnidadeCurricular(aulaAtual.getUnidadeCurricular());
 
+        mudarStatusEEnviaOcorrencia(
+                StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO,
+                aqvOptional.get(),
+                ocorrencia
+        );
+
         ocorrenciaRepository.save(ocorrencia);
+
 
         return "Ocorrência de atraso criada com sucesso!";
     }
