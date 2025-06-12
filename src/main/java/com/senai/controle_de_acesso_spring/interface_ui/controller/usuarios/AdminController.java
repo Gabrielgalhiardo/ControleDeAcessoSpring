@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admins")
 @AllArgsConstructor
 public class AdminController {
 
@@ -18,8 +18,8 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping
-    public ResponseEntity<Void>cadastrarAdmin(@RequestBody AdminDto dto) {
-        adminService.cadastrarAdmin(dto);
+    public ResponseEntity<Void>cadastrarAdmin(@RequestBody AdminDto adminDto) {
+        adminService.cadastrarAdmin(adminDto);
         return  ResponseEntity.ok().build();
     }
 

@@ -16,7 +16,6 @@ public record OcorrenciaDTO(
     StatusDaOcorrencia statusDaOcorrencia,
     LocalDateTime dataHoraCriacao,
     LocalDateTime dataHoraConclusao,
-
     Aluno aluno,
     Professor professor,
     UnidadeCurricular unidadeCurricular
