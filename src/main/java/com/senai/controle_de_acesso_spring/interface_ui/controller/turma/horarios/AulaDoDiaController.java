@@ -27,7 +27,7 @@ public class AulaDoDiaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/ativos")
+    @GetMapping
     public ResponseEntity<List<AulasDoDiaDTO>> listarAulasDoDia(){
         return ResponseEntity.ok(aulasDoDiaService.listarAulasDoDia());
     }
