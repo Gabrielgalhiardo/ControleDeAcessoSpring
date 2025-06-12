@@ -1,6 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios;
 
-import com.senai.controle_de_acesso_spring.application.dto.users.AQVDto;
+import com.senai.controle_de_acesso_spring.application.dto.usuarios.AQVDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.AQV;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.AQVRepository;

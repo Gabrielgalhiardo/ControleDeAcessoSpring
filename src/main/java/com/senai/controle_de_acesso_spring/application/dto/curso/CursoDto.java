@@ -3,6 +3,8 @@ package com.senai.controle_de_acesso_spring.application.dto.curso;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Curso;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeCurso;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public record CursoDto(
@@ -11,11 +13,18 @@ public record CursoDto(
     TipoDeCurso tipoDeCurso,
     Integer cargaHoraria,
     Integer toleranciaMinutos,
-//    Integer quantidadeDeSemestres,
-    List<UnidadeCurricular> unidadesCurriculares
+    List<UnidadeCurricularDto> unidadesCurricularesDTO
 ) {
     public static CursoDto toDTO(Curso c){
-        return new CursoDto(c.getId(), c.getTitulo(), c.getTipoDeCurso(), c.getCargaHoraria(), c.getToleranciaMinutos(), c.getUnidadesCurriculares());
+        return new CursoDto(
+                c.getId(),
+                c.getTitulo(),
+                c.getTipoDeCurso(),
+                c.getCargaHoraria(),
+                c.getToleranciaMinutos(),
+                c.getUnidadesCurriculares().stream()
+                        .map(UnidadeCurricularDto::toDTO)
+                        .toList());
     }
 
     public Curso fromDTO(){
@@ -26,7 +35,10 @@ public record CursoDto(
         curso.setCargaHoraria(cargaHoraria);
         curso.setToleranciaMinutos(toleranciaMinutos);
 //        curso.set(quantidadeDeSemestres);
-        curso.setUnidadesCurriculares(unidadesCurriculares);
+        List<UnidadeCurricular> ucs = unidadesCurricularesDTO.stream()
+                .map(unidadeCurricularDto -> unidadeCurricularDto.fromDTO(curso))
+                .toList();
+        curso.setUnidadesCurriculares(ucs);
         return curso;
     }
 

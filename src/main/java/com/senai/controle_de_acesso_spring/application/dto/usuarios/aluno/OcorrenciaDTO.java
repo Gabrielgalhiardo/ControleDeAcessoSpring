@@ -9,21 +9,20 @@ import com.senai.controle_de_acesso_spring.domain.model.enums.TipoDeOcorrencia;
 
 import java.time.LocalDateTime;
 
-public record OcorrenciaDto(
+public record OcorrenciaDTO(
     Long id,
     TipoDeOcorrencia tipo,
     String descricao,
     StatusDaOcorrencia statusDaOcorrencia,
     LocalDateTime dataHoraCriacao,
     LocalDateTime dataHoraConclusao,
-
     Aluno aluno,
     Professor professor,
     UnidadeCurricular unidadeCurricular
 
 ) {
-    public static OcorrenciaDto toDTO(Ocorrencia o){
-        return new OcorrenciaDto(
+    public static OcorrenciaDTO toDTO(Ocorrencia o){
+        return new OcorrenciaDTO(
                 o.getId(),
                 o.getTipo(),
                 o.getDescricao(),

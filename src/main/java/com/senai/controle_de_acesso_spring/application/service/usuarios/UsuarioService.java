@@ -4,6 +4,7 @@ import com.senai.controle_de_acesso_spring.application.dto.usuarios.UsuarioDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.*;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.UsuarioRepository;
+import com.senai.controle_de_acesso_spring.domain.service.usuarios.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
-    @Autowired private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private AuthService authService;
 
     public void cadastrarUsuario(UsuarioDto dto) {
-        usuarioRepository.save(dto.fromDTO());
+        authService.cadastrarUsuario(dto);
     }
 
     public List<UsuarioDto> listarAtivos() {

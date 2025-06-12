@@ -28,7 +28,8 @@ public class AmbienteService {
     public Optional<AmbienteDto> buscarPorId(Long id) {
         return ambienteRepository.findById(id).map(a -> new AmbienteDto(
                 a.getId(),
-                a.getNome()
+                a.getNome(),
+                a.isAtivo()
         ));
     }
 
