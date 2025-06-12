@@ -44,6 +44,7 @@ public class AulaController {
         return ResponseEntity.notFound().build();
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id){
         if (aulaService.deletar(id)){
