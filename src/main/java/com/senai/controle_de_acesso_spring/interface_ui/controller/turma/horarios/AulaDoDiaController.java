@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/aulasDoDia")
+@RequestMapping("/aulas-do-dia")
 public class AulaDoDiaController {
     @Autowired
     AulasDoDiaService aulasDoDiaService;
