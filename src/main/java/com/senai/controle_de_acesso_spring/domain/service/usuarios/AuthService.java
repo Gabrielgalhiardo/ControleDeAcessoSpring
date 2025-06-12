@@ -51,23 +51,20 @@ public class AuthService {
                         recuperarTipoDeUsuario(userDetails.getUsuario()).name()));
     }
 
-    public void registrarUsuarioSimples(RegisterDTO registerDTO){
-        Usuario usuario = switch (registerDTO.tipoDeUsuario()) {
+    public void registrarUsuarioSimples(UsuarioDto usuarioDto){
+        Usuario usuario = switch (usuarioDto.tipoDeUsuario()) {
             case ALUNO -> new Aluno();
             case PROFESSOR -> new Professor();
             case ADMINISTRADOR -> new Admin();
             case COORDENADOR -> new Coordenador();
             case AQV -> new AQV();
         };
-        if (registerDTO.username().contains("@")){
-            usuario.setEmail(registerDTO.username());
-        }else{
-            usuario.setCpf(registerDTO.username());
-        }
+        usuario.setEmail(usuarioDto.email());
+        usuario.setCpf(usuarioDto.cpf());
         usuario.setPermissoes(new ArrayList<>());
-        usuario.getPermissoes().add(pegarPermissaoPorTipoDeUsuario(registerDTO.tipoDeUsuario()));
-        usuario.setNome(registerDTO.nome());
-        usuario.setSenha(passwordEncoder.encode(registerDTO.password()));
+        usuario.getPermissoes().add(pegarPermissaoPorTipoDeUsuario(usuarioDto.tipoDeUsuario()));
+        usuario.setNome(usuarioDto.nome());
+        usuario.setSenha(passwordEncoder.encode(usuarioDto.senha()));
         usuario.setStatusDoUsuario(StatusDoUsuario.ATIVO);
 
         usuarioRepository.save(usuario);
