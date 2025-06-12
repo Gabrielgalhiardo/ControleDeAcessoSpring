@@ -38,8 +38,13 @@ public class SemestreService {
                 .orElseThrow(() -> new RuntimeException("SubTurma não encontrada"));
 
         Semestre semestre = new Semestre();
-        subTurma.setSemestres(new ArrayList<>());
-        subTurma.getSemestres().add(semestre);
+        Optional<List<Semestre>> semestreOptional = Optional.ofNullable(subTurma.getSemestres());
+        if (semestreOptional.isPresent()) {
+            subTurma.getSemestres().add(semestre);
+        }else {
+            subTurma.setSemestres(new ArrayList<>());
+            subTurma.getSemestres().add(semestre);
+        }
         semestre.setNumero(subTurma.getSemestres().size());
         semestre.setSubTurma(subTurma);
         semestre.setNomeDaTurma(
@@ -86,17 +91,25 @@ public class SemestreService {
         LocalDate dataInicio = turma.getDataInicial();
         LocalDate dataAtual = LocalDate.now();
 
+        System.out.println("Pegando data inicial: " + dataInicio);
         if (dataAtual.isBefore(dataInicio)) {
+            System.out.println("entrou IF e retornou 1");
             return 1;
         }
 
+
         long meses = ChronoUnit.MONTHS.between(dataInicio, dataAtual);
+        System.out.println("Quantidade de meses: "+meses );
         int semestreAtual = (int) (meses / 6) + 1;
 
+        System.out.println("Semestre atual: " + semestreAtual);
         if (turma.getQtdSemestres() != null && semestreAtual > turma.getQtdSemestres()) {
+            System.out.println("Entrou no if: " + turma.getQtdSemestres());
             return turma.getQtdSemestres();
-        }
 
+
+        }
+        System.out.println("Semestre atual final: " + semestreAtual) ;
         return semestreAtual;
     }
 }
