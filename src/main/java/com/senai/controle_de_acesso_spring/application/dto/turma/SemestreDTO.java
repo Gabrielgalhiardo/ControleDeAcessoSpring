@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.dto.turma;
 
+import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioPadraoDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.HorarioSemanalDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
@@ -13,7 +14,7 @@ public record SemestreDTO (
         Long id,
         int numero,
         String nomeDaTurma,
-        HorarioPadrao horarioPadrao,
+        HorarioPadraoDTO horarioPadrao,
         List<HorarioSemanalDTO> horarioSemanalDTOS,
         SubTurma subTurma
 ) {
@@ -22,7 +23,7 @@ public record SemestreDTO (
         semestre.setId(semestreDTO.id);
         semestre.setNumero(semestreDTO.numero);
         semestre.setNomeDaTurma(semestreDTO.nomeDaTurma);
-        semestre.setHorarioPadrao(semestreDTO.horarioPadrao);
+        semestre.setHorarioPadrao(semestreDTO.horarioPadrao.fromDTO());
         semestre.setHorariosSemanais(semestreDTO.horarioSemanalDTOS.stream()
                 .map(HorarioSemanalDTO::fromDTO)
                 .toList());
@@ -34,7 +35,7 @@ public record SemestreDTO (
                 semestre.getId(),
                 semestre.getNumero(),
                 semestre.getNomeDaTurma(),
-                semestre.getHorarioPadrao(),
+                HorarioPadraoDTO.toDTO(semestre.getHorarioPadrao()),
                 semestre.getHorariosSemanais().stream()
                         .map(HorarioSemanalDTO::toDTO)
                         .toList(),

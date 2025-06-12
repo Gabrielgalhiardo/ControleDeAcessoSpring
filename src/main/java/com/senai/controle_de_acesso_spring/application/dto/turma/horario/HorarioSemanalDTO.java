@@ -1,5 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.dto.turma.horario;
 
+import com.senai.controle_de_acesso_spring.application.dto.turma.SemestreDTO;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioPadrao;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioSemanal;
 
 import java.time.LocalDate;

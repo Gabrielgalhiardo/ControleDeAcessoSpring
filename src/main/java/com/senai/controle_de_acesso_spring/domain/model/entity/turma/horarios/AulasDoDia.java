@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios;
 
+import com.senai.controle_de_acesso_spring.domain.model.enums.DiaDaSemana;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,9 +14,11 @@ public class AulasDoDia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private DayOfWeek diaDaSemana;
+    @Enumerated(EnumType.STRING)
+    @JoinColumn(nullable = true)
+    private DiaDaSemana diaDaSemana;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private HorarioBase horario;
 
     @OneToMany(mappedBy = "aulasDia", cascade = CascadeType.ALL, orphanRemoval = true)

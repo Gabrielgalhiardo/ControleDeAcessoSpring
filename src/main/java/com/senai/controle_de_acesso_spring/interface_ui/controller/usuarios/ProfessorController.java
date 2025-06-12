@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/professor")
+@RequestMapping("/professores")
 public class ProfessorController {
     @Autowired
     ProfessorService professorService;
@@ -27,7 +27,7 @@ public class ProfessorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/ativos")
+    @GetMapping
     public ResponseEntity<List<ProfessorDto>> listarAtivos() {
         return ResponseEntity.ok(professorService.listarProfessoresAtivos());
     }

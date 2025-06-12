@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public record SubTurmaDTO(
         Long id,
         String nome,
-        Turma turma,
+        TurmaDto turmaDto,
         List<AlunoDto> alunoDtos,
         List<SemestreDTO> semestreDTOS
 ) {
@@ -20,20 +20,20 @@ public record SubTurmaDTO(
         return new SubTurmaDTO(
                 s.getId(),
                 s.getNome(),
-                s.getTurma(),
+                TurmaDto.toDTO(s.getTurma()),
                 s.getAlunos().stream()
                         .map(AlunoDto::toDTO)
-                        .toList(),
+                        .collect(Collectors.toList()),
                 s.getSemestres().stream()
                         .map(SemestreDTO::toDTO)
-                        .toList()
+                        .collect(Collectors.toList())
         );
     }
 
     public SubTurma fromDTO() {
         SubTurma subTurma = new SubTurma();
         subTurma.setNome(nome);
-        subTurma.setTurma(turma);
+        subTurma.setTurma(turmaDto.fromDTO());
         List<Aluno> alunosConvertidos = alunoDtos.stream()
                 .map(AlunoDto::fromDTO)
                 .collect(Collectors.toList());

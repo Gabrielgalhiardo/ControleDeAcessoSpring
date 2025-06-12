@@ -15,15 +15,15 @@ public class Aula {
 
     private Integer ordem;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private AulasDoDia aulasDia;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private UnidadeCurricular unidadeCurricular;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Professor professor;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Ambiente ambiente;
 }
