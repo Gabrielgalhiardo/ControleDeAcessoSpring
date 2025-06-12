@@ -153,7 +153,9 @@ public class AulaService {
 //                .orElseThrow(() -> new RuntimeException("Sem aulas hoje.")));
 
             TipoDeCurso tipoDeCurso = subTurma.getTurma().getCurso().getTipoDeCurso();
+        System.out.println("PEgou tipo de curso "+tipoDeCurso);
         for (Aula aula : aulasDoDiaOpt.get().getAulas()) {
+            System.out.println("Entrou no for each de aula");
             int ordem = aula.getOrdem();
             int aulasAteIntervalo;
 
