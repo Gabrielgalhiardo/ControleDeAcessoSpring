@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/unidade-curricular")
+@RequestMapping("/unidades-curriculares")
 public class UnidadeCurricularController {
     @Autowired
     private UnidadeCurricularService unidadeCurricularService;
