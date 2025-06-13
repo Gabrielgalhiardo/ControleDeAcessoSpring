@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/aulasDoDia")
+@RequestMapping("/aulas-do-dia")
 public class AulaDoDiaController {
     @Autowired
     AulasDoDiaService aulasDoDiaService;
@@ -27,7 +27,7 @@ public class AulaDoDiaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/ativos")
+    @GetMapping
     public ResponseEntity<List<AulasDoDiaDTO>> listarAulasDoDia(){
         return ResponseEntity.ok(aulasDoDiaService.listarAulasDoDia());
     }

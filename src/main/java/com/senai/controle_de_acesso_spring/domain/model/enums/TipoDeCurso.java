@@ -2,7 +2,7 @@ package com.senai.controle_de_acesso_spring.domain.model.enums;
 
 public enum TipoDeCurso {
     CAI(20, 50),
-    TECNICO(1,1);
+    TECNICO(15,45);
 
     private final int intevarloMinutos;
     private final int minutosPorAula;

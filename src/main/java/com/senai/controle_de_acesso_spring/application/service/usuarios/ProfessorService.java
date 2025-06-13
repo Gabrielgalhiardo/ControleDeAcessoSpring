@@ -39,6 +39,8 @@ public class ProfessorService {
             professor.setEmail(professorAtualizado.getEmail());
             professor.setDataNascimento(professorAtualizado.getDataNascimento());
             professor.setCpf(professorAtualizado.getCpf());
+            professor.setIdAcesso(professorAtualizado.getIdAcesso());
+            professor.setSenha(professorAtualizado.getSenha());
             professorRepo.save(professor);
             return true;
         }).orElse(false);
