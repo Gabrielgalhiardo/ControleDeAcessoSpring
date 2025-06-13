@@ -193,6 +193,8 @@ public class OcorrenciaService {
         ocorrencia.setStatusDaOcorrencia(StatusDaOcorrencia.AGUARDANDO_AUTORIZACAO);
         ocorrencia.setDataHoraCriacao(agora);
         ocorrencia.setAluno(aluno);
+        System.out.println("Professor que recebeu a ocorrência "+aulaAtual.getProfessor().getIdAcesso());
+        System.out.println("Professor que recebeu a ocorrência "+aulaAtual.getProfessor().getEmail());
         ocorrencia.setProfessorResponsavel(aulaAtual.getProfessor());
         ocorrencia.setUnidadeCurricular(aulaAtual.getUnidadeCurricular());
 
