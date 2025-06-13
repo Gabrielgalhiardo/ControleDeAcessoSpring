@@ -30,11 +30,12 @@ public class FiltroDeAutenticacao extends OncePerRequestFilter {
     private UsuarioRepository usuarioRepository;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (checarSeARotaDoEndpointNaoEPublica(request)) {
+//        if (checarSeARotaDoEndpointNaoEPublica(request)) {
         String token = recuperarToken(request);
             if (token != null) {
                 if (jwtUtil.validateToken(token)) {
 
+                    System.out.println("Validou o token");
                     String username = jwtUtil.extractUsername(token);
                     Usuario usuario = usuarioRepository.findByEmailOrCpf(username)
                                     .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
@@ -49,7 +50,7 @@ public class FiltroDeAutenticacao extends OncePerRequestFilter {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
                 }
             }
-        }
+//        }
 
         filterChain.doFilter(request, response);
     }
@@ -60,8 +61,14 @@ public class FiltroDeAutenticacao extends OncePerRequestFilter {
     }
 
     private String recuperarToken(HttpServletRequest request){
+        String uri = request.getRequestURI();
+        if (uri.contains("token=")) {
+            System.out.println("Usou a uri para validar o token");
+            return uri.substring(uri.indexOf("token=") + 6);
+        }
         String cabecalho = request.getHeader("Authorization");
         if (cabecalho != null && cabecalho.startsWith("Bearer ")) {
+            System.out.println("Usou o cabeçalho Authorization para validar o token");
             return cabecalho.replace("Bearer ", "");
         }
         return null;
