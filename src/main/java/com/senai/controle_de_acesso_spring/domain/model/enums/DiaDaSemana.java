@@ -24,5 +24,9 @@ public enum DiaDaSemana {
         };
     }
 
+    public DayOfWeek toDayOfWeek() {
+        return DayOfWeek.of(this.ordinal() + 1);
+    }
+
 
 }
