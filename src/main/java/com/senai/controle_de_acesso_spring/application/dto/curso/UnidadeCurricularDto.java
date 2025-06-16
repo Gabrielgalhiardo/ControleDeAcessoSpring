@@ -1,5 +1,6 @@
 package com.senai.controle_de_acesso_spring.application.dto.curso;
 
+import com.senai.controle_de_acesso_spring.application.dto.usuarios.ProfessorDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Curso;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
@@ -12,14 +13,14 @@ public record UnidadeCurricularDto(
         Long id,
         String nome,
         Integer cargaHorariaTotal,
-        List<Professor>professores
+        List<ProfessorDto>professores
 ) {
     public static UnidadeCurricularDto toDTO(UnidadeCurricular u) {
         return new UnidadeCurricularDto(
                 u.getId(),
                 u.getNome(),
                 u.getCargaHorariaTotal(),
-                u.getProfessores()
+                u.getProfessores().stream().map(ProfessorDto::toDTO).toList()
         );
     }
 
@@ -29,7 +30,7 @@ public record UnidadeCurricularDto(
         unidadeCurricular.setNome(nome);
         unidadeCurricular.setCargaHorariaTotal(cargaHorariaTotal);
         unidadeCurricular.setCurso(curso);
-        unidadeCurricular.setProfessores(professores);
+        unidadeCurricular.setProfessores(professores.stream().map(ProfessorDto::fromDTO).toList());
         return unidadeCurricular;
     }
 }
