@@ -1,6 +1,9 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios;
 
+import com.senai.controle_de_acesso_spring.application.dto.curso.UnidadeCurricularDto;
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.ProfessorDto;
+import com.senai.controle_de_acesso_spring.application.service.curso.UnidadeCurricularService;
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDoUsuario;
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.ProfessorRepository;
@@ -16,6 +19,8 @@ public class ProfessorService {
     @Autowired
     private ProfessorRepository professorRepo;
 
+    @Autowired
+    private UnidadeCurricularService unidadeCurricularService;
     public void cadastrarProfessor(ProfessorDto professorDto){
         professorRepo.save(professorDto.fromDTO());
     }

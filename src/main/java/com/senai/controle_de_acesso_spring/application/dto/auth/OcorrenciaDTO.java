@@ -11,6 +11,7 @@ public record OcorrenciaDTO(
         TipoDeOcorrencia tipo,
         String descricao,
         Long alunoId,
+        Long unidadeCurricularId,
         Long professorResponsavelId,
         StatusDaOcorrencia status,
         LocalDateTime dataHoraCriacao
@@ -21,6 +22,7 @@ public record OcorrenciaDTO(
                 ocorrencia.getTipo(),
                 ocorrencia.getDescricao(),
                 ocorrencia.getAluno() != null ? ocorrencia.getAluno().getId() : null,
+                ocorrencia.getUnidadeCurricular() != null ? ocorrencia.getUnidadeCurricular().getId() : null,
                 ocorrencia.getProfessorResponsavel() != null ? ocorrencia.getProfessorResponsavel().getId() : null,
                 ocorrencia.getStatusDaOcorrencia(),
                 ocorrencia.getDataHoraCriacao()

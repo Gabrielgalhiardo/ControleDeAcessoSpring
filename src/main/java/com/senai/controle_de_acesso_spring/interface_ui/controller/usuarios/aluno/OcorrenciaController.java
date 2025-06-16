@@ -2,11 +2,14 @@ package com.senai.controle_de_acesso_spring.interface_ui.controller.usuarios.alu
 
 import com.senai.controle_de_acesso_spring.application.dto.auth.OcorrenciaDTO;
 import com.senai.controle_de_acesso_spring.application.service.usuarios.aluno.OcorrenciaService;
+import com.senai.controle_de_acesso_spring.domain.model.enums.StatusDaOcorrencia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class OcorrenciaController {
@@ -21,7 +24,7 @@ public class OcorrenciaController {
 
     @MessageMapping("/ocorrencia/decisao")
     public void decidirSaida(@Payload OcorrenciaDTO dto) {
-        ocorrenciaService.decidirSaida(dto);
+        ocorrenciaService.decidir(dto);
     }
 
     @MessageMapping("/ocorrencia/ciencia")
@@ -35,8 +38,6 @@ public class OcorrenciaController {
     }
 
 
-
-
     //    @PostMapping
 //    public ResponseEntity<Void> cadastrarOcorrencia(@RequestBody OcorrenciaDto ocorrenciaDto) {
 //        ocorrenciaService.cadastrarOcorrencia(ocorrenciaDto);
@@ -46,37 +47,34 @@ public class OcorrenciaController {
     public void criarOcorrenciaDeAtraso(String idAcesso) {
         ocorrenciaService.criarOcorrenciaDeAtraso(idAcesso);
     }
-//
-//    public void criarOcorrenciaDeSaida(String idAcesso) {
-//        ocorrenciaService.criarOcorrenciaDeSaida(idAcesso);
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<List<OcorrenciaDto>> listarOcorrencias() {
-//        return ResponseEntity.ok(ocorrenciaService.listarOcorrencias());
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<OcorrenciaDto> buscarOcorrenciaPorId(@PathVariable Long id) {
-//        return ocorrenciaService.buscarOcorrenciaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-//    }
-//
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<OcorrenciaDto> atualizarOcorrencia(@PathVariable Long id, @RequestBody OcorrenciaDto ocorrenciaDto) {
-//        if (ocorrenciaService.atualizarOcorrencia(id, ocorrenciaDto)) {
-//            return ResponseEntity.ok().build();
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//
-//    @PutMapping("/{id}/status")
-//    public ResponseEntity<OcorrenciaDto> atualizarStatusDaOcorrencia(@PathVariable Long id, @RequestBody StatusDaOcorrencia statusDaOcorrencia) {
-//        if (ocorrenciaService.mudarStatusDaOcorrencia(id, statusDaOcorrencia)) {
-//            return ResponseEntity.ok().build();
-//        }
-//        return ResponseEntity.notFound().build();
-//
-//    }
+
+
+    @GetMapping
+    public ResponseEntity<List<OcorrenciaDTO>> listarOcorrencias() {
+        return ResponseEntity.ok(ocorrenciaService.listarOcorrencias());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OcorrenciaDTO> buscarOcorrenciaPorId(@PathVariable Long id) {
+        return ocorrenciaService.buscarOcorrenciaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OcorrenciaDTO> atualizarOcorrencia(@PathVariable Long id, @RequestBody OcorrenciaDTO ocorrenciaDto) {
+        if (ocorrenciaService.atualizarOcorrencia(id, ocorrenciaDto)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}/decidir")
+    public ResponseEntity<OcorrenciaDTO> atualizarStatusDaOcorrencia(@RequestBody OcorrenciaDTO ocorrenciaDTO) {
+
+        ocorrenciaService.decidir(ocorrenciaDTO);
+
+        return ResponseEntity.ok().build();
+
+    }
 
 }
