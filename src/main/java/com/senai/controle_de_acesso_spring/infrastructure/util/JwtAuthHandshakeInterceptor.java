@@ -32,7 +32,6 @@ public class JwtAuthHandshakeInterceptor implements HandshakeInterceptor {
             }
         }
 
-
         if (token == null && request.getURI().toString().contains("token=")) {
             String uri = request.getURI().toString();
             token = uri.substring(uri.indexOf("token=") + 6);

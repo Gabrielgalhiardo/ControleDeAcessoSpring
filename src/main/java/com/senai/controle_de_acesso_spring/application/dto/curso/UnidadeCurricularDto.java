@@ -33,4 +33,13 @@ public record UnidadeCurricularDto(
         unidadeCurricular.setProfessores(professores.stream().map(ProfessorDto::fromDTO).toList());
         return unidadeCurricular;
     }
+
+    public UnidadeCurricular fromDTO() {
+        UnidadeCurricular unidadeCurricular = new UnidadeCurricular();
+        unidadeCurricular.setId(id);
+        unidadeCurricular.setNome(nome);
+        unidadeCurricular.setCargaHorariaTotal(cargaHorariaTotal);
+        unidadeCurricular.setProfessores(professores.stream().map(ProfessorDto::fromDTO).toList());
+        return unidadeCurricular;
+    }
 }

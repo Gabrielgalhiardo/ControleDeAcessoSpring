@@ -1,8 +1,8 @@
 package com.senai.controle_de_acesso_spring.application.service.usuarios.aluno;
 
 import com.senai.controle_de_acesso_spring.application.dto.auth.OcorrenciaDTO;
+import com.senai.controle_de_acesso_spring.application.dto.curso.UnidadeCurricularDto;
 import com.senai.controle_de_acesso_spring.application.dto.usuarios.ProfessorDto;
-//import com.senai.controle_de_acesso_spring.application.dto.usuarios.aluno.OcorrenciaDTO;
 import com.senai.controle_de_acesso_spring.application.service.curso.UnidadeCurricularService;
 import com.senai.controle_de_acesso_spring.application.service.turma.SubTurmaService;
 import com.senai.controle_de_acesso_spring.application.service.turma.horarios.AulaService;
@@ -72,7 +72,7 @@ public class OcorrenciaService {
         Professor professor = professorService.buscarPorId(dto.professorResponsavelId()).map(ProfessorDto::fromDTO)
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
 
-        UnidadeCurricular unidadeCurricular = unidadeCurricularService.(professor.getId())
+        UnidadeCurricular unidadeCurricular = unidadeCurricularService.buscarPorId(dto.unidadeCurricularId()).map(UnidadeCurricularDto::fromDTO)
                 .orElseThrow(() -> new RuntimeException("Unidade Curricular não encontrada"));
 
         Ocorrencia ocorrencia = dto.fromDTO();

@@ -1,11 +1,11 @@
 package com.senai.controle_de_acesso_spring.application.service.curso;
 
 import com.senai.controle_de_acesso_spring.application.dto.curso.UnidadeCurricularDto;
-import com.senai.controle_de_acesso_spring.application.dto.curso.unidade_curricular.UnidadeCurricularProfessorDTO;
+import com.senai.controle_de_acesso_spring.application.dto.usuarios.ProfessorDto;
 import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
+import com.senai.controle_de_acesso_spring.application.dto.curso.unidade_curricular.UnidadeCurricularProfessorDTO;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.SubTurma;
-import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Aula;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioBase;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.HorarioSemanal;
@@ -14,6 +14,10 @@ import com.senai.controle_de_acesso_spring.domain.repository.curso.UnidadeCurric
 import com.senai.controle_de_acesso_spring.domain.repository.usuarios.aluno.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -29,13 +33,34 @@ public class UnidadeCurricularService {
     private AlunoRepository alunoRepository;
 
 //    public void cadastrarUnidadeCurricular(UnidadeCurricularDto unidadeCurricularDto) {
-//        unidadeCurricularRepository.save(unidadeCurricularDto.fromDTO(unidade));
+//        unidadeCurricularRepository.save(unidadeCurricularDto.);
 //    }
 
     public List<UnidadeCurricularDto> listarUnidadeCurricular() {
         return unidadeCurricularRepository.findAll()
                 .stream().map(UnidadeCurricularDto::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public Optional<UnidadeCurricularDto> buscarPorId(Long id) {
+        return unidadeCurricularRepository.findById(id).map(uc -> new UnidadeCurricularDto(
+                uc.getId(),
+                uc.getNome(),
+                uc.getCargaHorariaTotal(),
+                uc.getProfessores().stream()
+                        .map(ProfessorDto::toDTO)
+                        .collect(Collectors.toList())
+        ));
+    }
+
+    public boolean atualizarUnidadeCurricular(Long id, UnidadeCurricularDto unidadeCurricularDto) {
+        return unidadeCurricularRepository.findById(id).map(unidadeCurricular -> {
+            UnidadeCurricular unidadeCurricularAtualizado = new UnidadeCurricular();
+            unidadeCurricular.setId(unidadeCurricularAtualizado.getId());
+            unidadeCurricular.setNome(unidadeCurricular.getNome());
+            unidadeCurricularRepository.save(unidadeCurricular);
+            return true;
+        }).orElse(false);
     }
 
     public Optional<UnidadeCurricular> buscarUnidadeCurricularPeloIdDoProfessor(Long professorId) {
@@ -91,5 +116,12 @@ public class UnidadeCurricularService {
         return List.of();
     }
 
-
+    public boolean inativarUnidadeCurricular(Long id) {
+        if (unidadeCurricularRepository.existsById(id)){
+            unidadeCurricularRepository.deleteById(id);
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
