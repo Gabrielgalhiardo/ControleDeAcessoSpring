@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/ocorrencias")
 public class OcorrenciaController {
 
     @Autowired
