@@ -27,7 +27,7 @@ public class TurmaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/ativos")
+    @GetMapping
     public ResponseEntity<List<TurmaDto>> listarAtivos(){
         return ResponseEntity.ok(turmaService.listarTurmasAtivos());
     }
