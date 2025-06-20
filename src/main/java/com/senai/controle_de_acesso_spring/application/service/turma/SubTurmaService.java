@@ -21,6 +21,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -213,6 +214,7 @@ public void criarSubTurma(Long turmaId) {
     HorarioPadrao horarioPadrao = horarioService.criarHorarioPadraoVazio(semestre);
     semestre.setHorarioPadrao(horarioPadrao);
 
+    HorarioSemanal horarioSemanal = horarioService.criarHorarioSemanalVazio(semestre, LocalDate.now());
     semestre.setHorariosSemanais(new ArrayList<>());
     List<Aluno> alunos = alunoService.listarAlunosAtivos().stream()
                 .map(AlunoDto::fromDTO)
@@ -271,6 +273,7 @@ public void criarSubTurma(Long turmaId) {
             int minutosPorIntervalo = subTurma.getTurma().getCurso().getTipoDeCurso().getIntevarloMinutos();
             int quantidadeDeAulasPorDia = subTurma.getTurma().getQtdAulasPorDia();
             LocalTime horarioDeSaida = horarioEntrada.plusMinutes((minutosPorAula*quantidadeDeAulasPorDia)+minutosPorIntervalo);
+        System.out.println("Horário de saída da turma: " + horarioDeSaida);
             if (horarioAtual.isAfter(horarioEntrada) && horarioAtual.isBefore(horarioDeSaida)) {
                 return subTurma;
             }else {
