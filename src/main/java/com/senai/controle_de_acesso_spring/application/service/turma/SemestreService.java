@@ -112,4 +112,14 @@ public class SemestreService {
         System.out.println("Semestre atual final: " + semestreAtual) ;
         return semestreAtual;
     }
+
+    @Transactional
+    public Semestre encontrarSemestreAtual(SubTurma subTurma) {
+        int numeroSemestreAtual = pegarSemestreAtual(subTurma.getTurma());
+        return subTurma.getSemestres().stream()
+                .filter(s -> s.getNumero() == numeroSemestreAtual)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Nenhum semestre encontrado."));
+    }
+
 }
