@@ -1,6 +1,7 @@
 package com.senai.controle_de_acesso_spring.application.service.turma.horarios;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
+import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.Aula;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.AulasDoDia;
 import com.senai.controle_de_acesso_spring.domain.model.enums.DiaDaSemana;
@@ -12,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +35,24 @@ public class AulasDoDiaService {
     public List<AulasDoDia> adicionarAulaDoDia(List<AulasDoDiaDTO> aulasDoDia){
             return aulasDoDiaRepo.saveAll(aulasDoDia.stream().map(this::toEntity).collect(Collectors.toList()));
     }
+
+    public AulasDoDia buscarAulasDoDia(Semestre semestre, LocalDate semana) {
+        DiaDaSemana diaAtual = DiaDaSemana.obterDiaDaSemanaAtual();
+
+        return semestre.getHorariosSemanais().stream()
+                .filter(hs -> hs.getSemanaReferencia().equals(semana))
+                .findFirst()
+                .flatMap(hs -> hs.getListaDeAulasDoDia().stream()
+                        .filter(ad -> ad.getDiaDaSemana().equals(diaAtual))
+                        .findFirst())
+                .or(() -> Optional.ofNullable(semestre.getHorarioPadrao())
+                        .flatMap(hp -> hp.getListaDeAulasDoDia().stream()
+                                .filter(ad -> ad.getDiaDaSemana().equals(diaAtual))
+                                .findFirst()))
+                .orElseThrow(() -> new RuntimeException("Sem aulas hoje."));
+    }
+
+
     public AulasDoDia toEntity(AulasDoDiaDTO aulasDoDiaDTO) {
         AulasDoDia aulasDoDia = new AulasDoDia();
         aulasDoDia.setDiaDaSemana(aulasDoDiaDTO.fromDTO().getDiaDaSemana());
