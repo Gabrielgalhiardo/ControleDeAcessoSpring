@@ -2,8 +2,11 @@ package com.senai.controle_de_acesso_spring.domain.service;
 
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulaDTO;
 import com.senai.controle_de_acesso_spring.application.dto.turma.horario.AulasDoDiaDTO;
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.Ambiente;
+import com.senai.controle_de_acesso_spring.domain.model.entity.curso.UnidadeCurricular;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.Semestre;
 import com.senai.controle_de_acesso_spring.domain.model.entity.turma.horarios.*;
+import com.senai.controle_de_acesso_spring.domain.model.entity.usuarios.Professor;
 import com.senai.controle_de_acesso_spring.domain.model.enums.DiaDaSemana;
 import com.senai.controle_de_acesso_spring.domain.repository.curso.AmbienteRepository;
 import com.senai.controle_de_acesso_spring.domain.repository.curso.UnidadeCurricularRepository;
@@ -13,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class HorarioService {
@@ -65,9 +68,74 @@ public class HorarioService {
     }
 
 
+//    @Transactional
+//    public void preencherHorario(HorarioBase horario, List<AulasDoDiaDTO> aulasDoDiaDTO) {
+//
+//        for (int i = 0; i < aulasDoDiaDTO.size(); i++) {
+//            AulasDoDiaDTO aulasDoDiaDTOAtualizada = aulasDoDiaDTO.get(i);
+//            AulasDoDia aulasDoDiaExistente = horario.getListaDeAulasDoDia().get(i);
+//
+//            aulasDoDiaExistente.setDiaDaSemana(aulasDoDiaDTOAtualizada.diaDaSemana());
+//
+//            List<Aula> aulasExistentes = aulasDoDiaExistente.getAulas();
+//
+//            for (int j = 0; j < aulasDoDiaDTOAtualizada.aulas().size(); j++) {
+//                AulaDTO aulaDTO = aulasDoDiaDTOAtualizada.aulas().get(j);
+//                Aula aulaExistente = aulasExistentes.get(j);
+//
+//                aulaExistente.setOrdem(j);
+//                aulaExistente.setAulasDia(aulasDoDiaExistente);
+//
+//                if (aulaDTO.unidadeCurricularId() != null) {
+//                    unidadeCurricularRepository.findById(aulaDTO.unidadeCurricularId())
+//                            .ifPresent(aulaExistente::setUnidadeCurricular);
+//                } else {
+//                    aulaExistente.setUnidadeCurricular(null);
+//                }
+//
+//                if (aulaDTO.professorId() != null) {
+//                    professorRepository.findById(aulaDTO.professorId())
+//                            .ifPresent(aulaExistente::setProfessor);
+//                } else {
+//                    aulaExistente.setProfessor(null);
+//                }
+//
+//                if (aulaDTO.ambienteId() != null) {
+//                    ambienteRepository.findById(aulaDTO.ambienteId())
+//                            .ifPresent(aulaExistente::setAmbiente);
+//                } else {
+//                    aulaExistente.setAmbiente(null);
+//                }
+//            }
+//        }
+//    }
+
     @Transactional
     public void preencherHorario(HorarioBase horario, List<AulasDoDiaDTO> aulasDoDiaDTO) {
+        // Coletar todos os IDs usados
+        Set<Long> ucIds = new HashSet<>();
+        Set<Long> profIds = new HashSet<>();
+        Set<Long> ambienteIds = new HashSet<>();
 
+        for (AulasDoDiaDTO dia : aulasDoDiaDTO) {
+            for (AulaDTO aula : dia.aulas()) {
+                if (aula.unidadeCurricularId() != null) ucIds.add(aula.unidadeCurricularId());
+                if (aula.professorId() != null) profIds.add(aula.professorId());
+                if (aula.ambienteId() != null) ambienteIds.add(aula.ambienteId());
+            }
+        }
+
+        // Buscar todas as entidades de uma vez
+        Map<Long, UnidadeCurricular> unidades = unidadeCurricularRepository.findAllById(ucIds)
+                .stream().collect(Collectors.toMap(UnidadeCurricular::getId, uc -> uc));
+
+        Map<Long, Professor> professores = professorRepository.findAllByIdIn(profIds)
+                .stream().collect(Collectors.toMap(Professor::getId, p -> p));
+
+        Map<Long, Ambiente> ambientes = ambienteRepository.findAllById(ambienteIds)
+                .stream().collect(Collectors.toMap(Ambiente::getId, a -> a));
+
+        // Atualizar os dados
         for (int i = 0; i < aulasDoDiaDTO.size(); i++) {
             AulasDoDiaDTO aulasDoDiaDTOAtualizada = aulasDoDiaDTO.get(i);
             AulasDoDia aulasDoDiaExistente = horario.getListaDeAulasDoDia().get(i);
@@ -83,27 +151,26 @@ public class HorarioService {
                 aulaExistente.setOrdem(j);
                 aulaExistente.setAulasDia(aulasDoDiaExistente);
 
-                if (aulaDTO.unidadeCurricularId() != null) {
-                    unidadeCurricularRepository.findById(aulaDTO.unidadeCurricularId())
-                            .ifPresent(aulaExistente::setUnidadeCurricular);
-                } else {
-                    aulaExistente.setUnidadeCurricular(null);
-                }
+                // Setar entidades com os maps carregados
+                aulaExistente.setUnidadeCurricular(
+                        aulaDTO.unidadeCurricularId() != null
+                                ? unidades.get(aulaDTO.unidadeCurricularId())
+                                : null
+                );
 
-                if (aulaDTO.professorId() != null) {
-                    professorRepository.findById(aulaDTO.professorId())
-                            .ifPresent(aulaExistente::setProfessor);
-                } else {
-                    aulaExistente.setProfessor(null);
-                }
+                aulaExistente.setProfessor(
+                        aulaDTO.professorId() != null
+                                ? professores.get(aulaDTO.professorId())
+                                : null
+                );
 
-                if (aulaDTO.ambienteId() != null) {
-                    ambienteRepository.findById(aulaDTO.ambienteId())
-                            .ifPresent(aulaExistente::setAmbiente);
-                } else {
-                    aulaExistente.setAmbiente(null);
-                }
+                aulaExistente.setAmbiente(
+                        aulaDTO.ambienteId() != null
+                                ? ambientes.get(aulaDTO.ambienteId())
+                                : null
+                );
             }
         }
     }
+
 }
